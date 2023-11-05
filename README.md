@@ -21,8 +21,8 @@ In order to download this package you can use the following commands in your ter
 mkdir ProductionAsymmetry
 cd ProductionAsymmetry
 git init
-git remote add -f origin https://github.com/mark1ry/D0_production_asymmetry
-git pull origin master
+git clone git@github.com:sjtaylor-9/LHCb-D0-asymmetry.git
+git pull origin main
 ```
 
 ## How to use
@@ -42,4 +42,4 @@ This should produce the same output as shown in the folder *example* (still to b
 A large amount of the scripts uses or is inspired by the code written by Camille Jarvis-Stiggants and Michael England during their MPhys project and Marc Oriol Pérez in his summer internship.
 
 
-**Author:** Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) / **Last modified:** 5th November 2023
+**Authors:** Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)/ **Last modified:** 5th November 2023
