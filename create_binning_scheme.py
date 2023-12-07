@@ -115,3 +115,26 @@ for i in np.arange(0, NBINS):
 
 # outputbin edges 
 np.savetxt(f"{args.path}/{args.year}_{args.size}_bins.txt", bins, delimiter=',')
+
+#output bin edges for 10 pT bins
+np.savetxt(f"{args.path}/{args.year}_{args.size}_pT_bins.txt", bins[0], delimiter=',')
+
+
+#Creating bin edges for 10 eta bins
+
+length_eta = len(data["D0_ETA"])
+mask_eta = np.ones(length_eta)
+mask_eta = np.logical_and(mask_eta, data["D0_ETA"]<5)
+length_eta = np.sum(mask_eta)
+data = data[mask_eta]
+
+# create bins
+bins_eta = np.empty(NBINS+1)
+eta_frame = pd.DataFrame({'Values': data["D0_ETA"]})
+eta_res, eta_bins = pd.qcut(eta_frame['Values'], q=NBINS, retbins=True)
+
+# outputbin edges 
+np.savetxt(f"{args.path}/{args.year}_{args.size}_eta_bins.txt", eta_bins, delimiter=',')
+
+
+
