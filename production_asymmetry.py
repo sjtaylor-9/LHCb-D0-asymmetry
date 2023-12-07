@@ -4,9 +4,9 @@ calculate_asymmetry.py
 
 This code is used to process the signal normalization yields and obtain the raw asymmetries. It also uses the input from using another signal model to obtain the systematic uncertainty due to the fit model. It finally outputs the results obtained both to the secreen and to a .txt file.
 The year of interest and size of the data to be analysed must be specified using the required flags --year --size.There also are the flags --input and --path which are not required. These are used to specify the directory where the input data is located and where the output file should be written, respectively. By default it is set to be the current working directory.
-This code is  inspired on the work of Camille Jarvis-Stiggants and Michael England. The code has been completely rewritten and reorganised, and some features have been added to add flexibility to the code, but some of the original functions have been used here as well.
+This code is  inspired on the work of Camille Jarvis-Stiggants and Michael England and Marc Oriol Pérez. The code has been completely rewritten and reorganised, and some features have been added to add flexibility to the code, but some of the original functions have been used here as well.
 
-Author: Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk)
+Authors: Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)
 Last edited: 16th September 2023
 """
 
