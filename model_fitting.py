@@ -283,7 +283,7 @@ model = {
     }
 }
 
-# Fit data
+# Binned fit
 if binned:
     with LHCbStyle():
         # Creates the histogram for the meson by converting the TTree D0_MM data inside the TChain to a TH1(base class of ROOT histograms)
