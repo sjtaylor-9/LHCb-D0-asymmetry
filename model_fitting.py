@@ -6,8 +6,8 @@ It can both fit the data using a binned approach or an unbinned one. The unbinne
 The parameters for the PDFs are read in from fit_parameters.txt, which is the output of fit_global.py. The year of interest, size of the data, meson of interest and polarity to be analysed must be specified using the required flags --year --size --meson --polarity. It is also required to specify the bin to be analyzed using the flag --bin, and if the fit should be done on the binned data or the unbinned data using the flag --binned_fit. There also are the flags --input --parameteers_path and --path, which are not required. These are used to specify the directory where the input data is located, where the global best-fit parameters can be found and where the output should be written, respectively. By default it is set to be the current working directory.
 This code is inspired by Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk).
 
-Author: 
-Last edited: 16th September 2023
+Author: Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)
+Last edited: 7th December 2023
 """
 
 # - - - - - - IMPORT STATEMENTS - - - - - - #
