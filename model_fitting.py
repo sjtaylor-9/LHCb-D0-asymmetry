@@ -2,14 +2,13 @@
 model_fitting.py
 
 This code is used to output a model of the data along with a pull distribution, which is used as the goodness of fit determiner. The code is ran as a global model and also as a local model for each of the bins across the phase space binning scheme. A txt file is also outputted containing the values and errors on the normalisation constant of both signal and background and the mean and error of the pull distribution.
-It can both fit the data using a binned approach or an unbinned one. The unbinned model used consists of a Gaussian function and a Crystal Ball function for the signal, and an exponential function for the background. The binned fit uses a Johnson Su distribution and two Bifurcated Gaussian functions as the signal model and an exponential function for the background.
+It can both fit the data using a binned approach or an unbinned one. The unbinned model used consists of a Gaussian function and a Crystal Ball function for the signal, and an exponential function for the background. The binned fit uses a Johnson Su distribution and two Bifurcated Gaussian functions as the signal model and an exponential function for the background. There is a systematic uncertainty assigned with the choice of model, hence the binned fit model chosen to assign to this systematic uncertainty consists of a Johnson Su distribution, a Gaussian function and a Bifurcated Gaussian function and an exponential background function.
 The parameters for the PDFs are read in from fit_parameters.txt, which is the output of fit_global.py. The year of interest, size of the data, meson of interest and polarity to be analysed must be specified using the required flags --year --size --meson --polarity. It is also required to specify the bin to be analyzed using the flag --bin, and if the fit should be done on the binned data or the unbinned data using the flag --binned_fit. There also are the flags --input --parameteers_path and --path, which are not required. These are used to specify the directory where the input data is located, where the global best-fit parameters can be found and where the output should be written, respectively. By default it is set to be the current working directory.
 This code is inspired by Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk).
 
 Author: Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)
 Last edited: 7th December 2023
 """
-
 # - - - - - - IMPORT STATEMENTS - - - - - - #
 import ROOT
 import argparse
