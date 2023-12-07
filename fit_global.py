@@ -275,7 +275,7 @@ if binned:
 
     # Model Signal for D0 MagUp
     binned_sample.defineType("Binned_D0_up_sample")
-    signal_D0_up = RooAddPdf("signal_D0_up", "signal D0 up", RooArgList(Johnson, bifurgauss, bifurgauss2), RooArgList(frac_D0_up, frac_D0_up_2))
+    signal_D0_up = RooAddPdf("signal_D0_up", "signal D0 up", RooArgList(Johnson, bifurgauss, bifurgauss2), RooArgList(frac_D0_up, frac_D0_up_2)) # Order of optimal model is Johnson, bifurgauss, bifurgauss2. Order of systematic uncertainty model is gaussian, Johnson, bifurgauss.
     # Generate model for D0 MagUp
     model_D0_up = RooAddPdf("model_D0_up", "model D0 up", [signal_D0_up, background], [Nsig_D0_up, Nbkg_D0_up])
     simultaneous_pdf.addPdf(model_D0_up, "Binned_D0_up_sample")
