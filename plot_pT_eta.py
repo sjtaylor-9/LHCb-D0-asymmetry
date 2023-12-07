@@ -133,15 +133,23 @@ file_path = f"{args.bin_path}/{args.year}_{args.size}_{args.scheme}_bins.txt"
 # Open the file in read mode
 with open(file_path, 'r') as file:
     # Read all lines from the file and store them in a list
-    x_value = [float(line.strip()) for line in file.readlines()]
+    bin_lines = [float(line.strip()) for line in file.readlines()]
+
+for i in range(0,10):
+    # Get center of bin and width of bin as error
+    x_value_indivual = (bin_lines[i]+bin_lines[i+1])/2
+    x_value_error_indivual = (bin_lines[i+1]) - ((bin_lines[i]+bin_lines[i+1])/2)
+    x_value_error.append(x_value_error_indivual)
+    x_value.append(x_value_indivual)
+
 if args.scheme == 'pT':
     x_value = [x / 1000 for x in x_value] #in GeV
-x_value = x_value[1:]
+    x_value_error = [x / 1000 for x in x_value_error] # in Gev
 
 # Plotting
 fig, ax = plt.subplots()
 
-Data = ax.errorbar(x_value, asymmetry, yerr=asymmetry_error, fmt='o', capsize=5, color = 'black', label = 'Data')
+Data = ax.errorbar(x_value, asymmetry, yerr=asymmetry_error, xerr=x_value_error, fmt='o', capsize=5, color = 'black', label = 'Data')
 if args.scheme == 'pT':
     ax.set_xlabel(r'$p_{T}$ [GeV$c^{-1}$]', fontsize = 16)
 elif args.scheme == 'eta':
@@ -162,8 +170,7 @@ fill2 = plt.axhspan(unbinned_asymm-unbinned_asymm_error, unbinned_asymm+unbinned
 if args.scheme == 'pT':
     ax.legend([(line1,fill1),(line2,fill2),Data],[r'Average result over $p_{T}$ bins', r'Bin integrated result','Data'])
 elif args.scheme == 'eta':
-    ax.legend([(line1,fill1),(line2,fill2)],[r'Average result over $\eta$ bins', r'Bin integrated result'])
-
+    ax.legend([(line1,fill1),(line2,fill2),Data],[r'Average result over $\eta$ bins', r'Bin integrated result','Data'])
 #Saves Fig
 if args.scheme == 'pT':
     plt.savefig(f'{args.path}/pT_Asymm_{args.year}_{args.size}.pdf', bbox_inches = "tight")
