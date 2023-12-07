@@ -1,8 +1,8 @@
 """
-plot_phase_space.py
+plot_asymm.py
 
 This code plots relevant histograms to show the event distribution across the phase space and it also shows the edges of the bins.
-The year of interest, size of the data, polarity and meson to be analysed must be specified using the required flags --year --size --polarity --meson. There also are the flags --input --path and --bin_path, which are not required. These are used to specify the directory where the input data is located, where the binning scheme can be found and where the output file should be written, respectively. By default it is set to be the current working directory.
+The year of interest, size of the data, polarity and meson to be analysed must be specified using the required flags --year --size --polarity --meson. There also are the flags --input --path --asymm_path and --bin_path,which are not required. These are used to specify the directory where the input data is located, where the binning scheme can be found and where the output file should be written, respectively. By default it is set to be the current working directory.
 It outputs several pdf files containing the relevant histograms.
 
 Author: Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk)
@@ -41,6 +41,8 @@ def parse_arguments():
     --input     Used to specify the directory in which the input data should be found. It is not required,
                 in the case it is not specified, the default path is the current working directory.
     --bin_path  Used to specify the directory in which the binning scheme should be found. It is not required,
+                in the case it is not specified, the default path is the current working directory.
+    --asymm_path  Used to specify the directory in which the asymmetry for each bin should be found. It is not required,
                 in the case it is not specified, the default path is the current working directory.
     
     Returns the parsed arguments.
