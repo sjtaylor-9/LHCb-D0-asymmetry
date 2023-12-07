@@ -221,17 +221,17 @@ sigmaR2 = RooRealVar("sigmaR2", "sigmaR2", parameters[16])
 Bifurgauss2 = RooBifurGauss("Bifurgauss2", "Bifurgauss", D0_M, bifurmean2, sigmaL2, sigmaR2)
 
 # Model Gaussian
-mean = RooRealVar("mean", "mean", parameters[27])
-sigma = RooRealVar("sigma", "sigma", parameters[28])
+mean = RooRealVar("mean", "mean", parameters[31])
+sigma = RooRealVar("sigma", "sigma", parameters[32])
 gauss = RooGaussian("Gaussian", "Gaussian", D0_M, mean, sigma)
 
 # Model CrystalBall
-Cmu = RooRealVar("Cmu", "Cmu", parameters[29])
-Csig = RooRealVar("Csig", "Csig", parameters[30])
-aL = RooRealVar("aL", "aL", parameters[31])
-nL = RooRealVar("nL", "nL", parameters[32])
-aR = RooRealVar("aR", "aR", parameters[33])
-nR = RooRealVar("nR", "nR", parameters[34])
+Cmu = RooRealVar("Cmu", "Cmu", parameters[33])
+Csig = RooRealVar("Csig", "Csig", parameters[34])
+aL = RooRealVar("aL", "aL", parameters[35])
+nL = RooRealVar("nL", "nL", parameters[36])
+aR = RooRealVar("aR", "aR", parameters[37])
+nR = RooRealVar("nR", "nR", parameters[38])
 crystal = RooCrystalBall("Crystal", "Crystal Ball", D0_M, Cmu, Csig, aL, nL, aR, nR)
 
 # Model Exponential Background
