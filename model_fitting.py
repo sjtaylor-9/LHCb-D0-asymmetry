@@ -1,10 +1,12 @@
 """
 model_fitting.py
 
-This code is used to fit the data in one of the bims. It then returns the relevant plots of the best fit to the data and a .txt file containing the values and errors on the normalization constant of both signal and background, the mean and standard deviation of the pull distribution and the reduced chi squared value. It can both fit the data using a binned approach or an unbinned one. The model used consists of a Gaussian function and a Crystal Ball function for the signal, and a Chevychev polynomial for the background. Some of the parameters are fixed to be the same as the best-fit values obtained during the global fit in order to obtain better convergence.
-The year of interest, size of the data, meson of interest and polarity to be analysed must be specified using the required flags --year --size --meson --polarity. It is also required to specify the bin to be analyzed using the flag --bin, and if the fit should be done on the binned data or the unbinned data using the flag --binned_fit. There also are the flags --input --parameteers_path and --path, which are not required. These are used to specify the directory where the input data is located, where the global best-fit parameters can be found and where the output should be written, respectively. By default it is set to be the current working directory.
+This code is used to output a model of the data along with a pull distribution, which is used as the goodness of fit determiner. The code is ran as a global model and also as a local model for each of the bins across the phase space binning scheme. A txt file is also outputted containing the values and errors on the normalisation constant of both signal and background and the mean and error of the pull distribution.
+It can both fit the data using a binned approach or an unbinned one. The unbinned model used consists of a Gaussian function and a Crystal Ball function for the signal, and an exponential function for the background. The binned fit uses a Johnson Su distribution and two Bifurcated Gaussian functions as the signal model and an exponential function for the background.
+The parameters for the PDFs are read in from fit_parameters.txt, which is the output of fit_global.py. The year of interest, size of the data, meson of interest and polarity to be analysed must be specified using the required flags --year --size --meson --polarity. It is also required to specify the bin to be analyzed using the flag --bin, and if the fit should be done on the binned data or the unbinned data using the flag --binned_fit. There also are the flags --input --parameteers_path and --path, which are not required. These are used to specify the directory where the input data is located, where the global best-fit parameters can be found and where the output should be written, respectively. By default it is set to be the current working directory.
+This code is inspired by Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk).
 
-Author: Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk)
+Author: 
 Last edited: 16th September 2023
 """
 
@@ -35,26 +37,25 @@ def parse_arguments():
     '''
     Parses the arguments needed along the code. Arguments:
     
-    --year      Used to specify the year at which the data was taken the user is interested in.
-                The argument must be one of: [16, 17, 18]. These referr to 2016, 2017 & 2018, respectively.
-    --size      Used to specify the amount of events the user is interested in analysing.
-                The argument must be one of: [large, small, medium, 1-8]. The integers specify the number of root
-                files to be read in. Large is equivalent to 8. Medium is equivalent to 4. Small takes 200000 events.
-    --polarity  Used to specify the polarity of the magnet the user is interested in.
-                The argument must be one of: [up, down].
-    --meson     Used to specify the meson the user is interested in.
-                The argument must be one of: [D0, D0bar, both].
-    --input     Used to specify the directory in which the input data should be found. It is not required,
-                in the case it is not specified, the default path is the current working directory.
-    --path      Used to specify the directory in which the output files should be written. It is not required,
-                in the case it is not specified, the default path is the current working directory.
-    --parameters_path
-                Used to specify the directory in which the global best-fit parameters should be found. It is not required,
-                in the case it is not specified, the default path is the current working directory.
-    --binned_fit
-                Used to specify if the data should be binned before performing the fit or an unbinned fit should be performed.
-                Type either y or Y for a binned fit. Type n or N for an unbinned fit.
-                
+    --year              Used to specify the year at which the data was taken the user is interested in.
+                        The argument must be one of: [16, 17, 18]. These referr to 2016, 2017 & 2018, respectively.
+    --size              Used to specify the amount of events the user is interested in analysing.
+                        The argument must be one of: [large, small, medium, 1-8]. The integers specify the number of root
+                        files to be read in. Large is equivalent to 8. Medium is equivalent to 4. Small takes 200000 events.
+    --polarity          Used to specify the polarity of the magnet the user is interested in.
+                        The argument must be one of: [up, down].
+    --meson             Used to specify the meson the user is interested in.
+                        The argument must be one of: [D0, D0bar, both].
+    --input             Used to specify the directory in which the input data should be found. It is not required,
+                        in the case it is not specified, the default path is the current working directory.
+    --path              Used to specify the directory in which the output files should be written. It is not required,
+                        in the case it is not specified, the default path is the current working directory.
+    --parameters_path    Used to specify the directory in which the global best-fit parameters should be found. It is not required,
+                        in the case it is not specified, the default path is the current working directory.
+    --binned_fit        Used to specify if the data should be binned before performing the fit or an unbinned fit should be performed.
+                        Type either y or Y for a binned fit. Type n or N for an unbinned fit.
+    --scheme            Used to 
+    
     Returns the parsed arguments.
     '''
     parser = argparse.ArgumentParser()
@@ -114,14 +115,12 @@ def parse_arguments():
         required=True,
         help="flag to set whether a binned or an unbinned should be performed (y/n)"
     )
-
     parser.add_argument(
         "--bin",
         type=str,
         required=False,
         help="flag to set whether a binned or an unbinned should be performed (y/n)"
     )
-
     parser.add_argument(
         "--scheme",
         type=str,
@@ -129,7 +128,6 @@ def parse_arguments():
         required=True,
         help="flag to set which binning scheme to use"
     )
-    
     return parser.parse_args()
 def enableBinIntegrator(func, num_bins):
     """
