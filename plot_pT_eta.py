@@ -1,4 +1,13 @@
+"""
+plot_asymm.py
 
+This code plots relevant histograms to show the asymmetry across the phase space of pT/eta.
+The year of interest, size of the data, polarity and meson to be analysed must be specified using the required flags --year --size --scheme. There also are the flags --path --asymm_path and --bin_path,which are not required. These are used to specify the directory where the binning scheme and asymmetry can be found, respectively. By default it is set to be the current working directory.
+It outputs several pdf files containing the relevant histograms.
+
+Authors: Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)/
+Last edited: 15th September 2023
+"""
 
 import os
 import argparse
