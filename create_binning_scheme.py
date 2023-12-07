@@ -29,7 +29,7 @@ def parse_arguments():
     --size      Used to specify the amount of events the user is interested in analysing.
                 The argument must be one of: [large, small, medium, 1-8]. The integers specify the number of root
                 files to be read in. Large is equivalent to 8. Medium is equivalent to 4. Small takes 200000 events.
-    --path      Used to specify the directory in which the output files should be written. It is not required,
+    --path      Used to specify the directory in which the output files should be written - the binning scheme. It is not required,
                 in the case it is not specified, the default path is the current working directory.
     --input     Used to specify the directory in which the input data should be found. It is not required,
                 in the case it is not specified, the default path is the current working directory.
@@ -113,7 +113,7 @@ for i in np.arange(0, NBINS):
     print(timeCounts)
     bins[i+1] = eta_bins
 
-# outputbin edges 
+# outputbin edges for 100 pT_eta bins
 np.savetxt(f"{args.path}/{args.year}_{args.size}_bins.txt", bins, delimiter=',')
 
 #output bin edges for 10 pT bins
@@ -128,12 +128,12 @@ mask_eta = np.logical_and(mask_eta, data["D0_ETA"]<5)
 length_eta = np.sum(mask_eta)
 data = data[mask_eta]
 
-# create bins
+# create bins for eta
 bins_eta = np.empty(NBINS+1)
 eta_frame = pd.DataFrame({'Values': data["D0_ETA"]})
 eta_res, eta_bins = pd.qcut(eta_frame['Values'], q=NBINS, retbins=True)
 
-# outputbin edges 
+# outputbin edges for eta
 np.savetxt(f"{args.path}/{args.year}_{args.size}_eta_bins.txt", eta_bins, delimiter=',')
 
 
