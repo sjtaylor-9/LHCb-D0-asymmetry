@@ -1,12 +1,12 @@
 """
 fit_global.py
 
-This code is used to perform a global fit on the selected data. In order to do so a simulatenous fit is done on the four datasets (with different mesons and polarities). This simulatenous fit keeps all variables constant across the four fits except for the normalisation constants which are allowed to vary independently. The model used consists of a Crystal Ball function and a Gaussian distribution to model the signal and an Exponential decay to model the background.
-The year of interest and size of the data to be analysed must be specified using the required flags --year --size. It is necessary to specify if the fit should be performed on the binned data or the unbinned data using the flag --binned_fit. There is a flag --path, which is not required. This one is used to specify the directory where the input data is located, and where the output file should be written. By default it is set to be the current working directory.
-It outputs the value of the constants shared in the simultaneous fit to a text file. This code is heavily inspired by Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk), however it has been redesigned so that the binned fit is succesfully performed.
+This code is used to perform a global fit on the selected data. In order to do so a simulatenous fit is done on the four datasets (with different mesons and polarities). This simulatenous fit keeps all variables constant across the four fits except for the normalisation constants which are allowed to vary independently. The unbinned fit model consists of a Crystal Ball function and a Gaussian distribution to model the signal and an Exponential decay to model the background.
+The binned fit model consists of a Johnson Su distribution and two Bifurcated Gaussian functions and an exponential background function. The year of interest and size of the data to be analysed must be specified using the required flags --year --size. It is necessary to specify if the fit should be performed on the binned data or the unbinned data using the flag --binned_fit. There is a flag --path, which is not required. This one is used to specify the directory where the input data is located, and where the output file should be written. By default it is set to be the current working directory.
+It outputs the value of the constants shared in the simultaneous fit to a text file. This code is inspired by Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk), however it has been redesigned so that the binned fit is succesfully performed.
 
 Author: Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)
-Last edited: 5th November 2023
+Last edited: 7th December 2023
 """
 
 import ROOT
@@ -31,18 +31,19 @@ def parse_arguments():
     '''
     Parses the arguments needed along the code. Arguments:
     
-    --year      Used to specify the year at which the data was taken the user is interested in.
-                The argument must be one of: [16, 17, 18]. These referr to 2016, 2017 & 2018, respectively.
-    --size      Used to specify the amount of events the user is interested in analysing.
-                The argument must be one of: [large, small, medium, 1-8]. The integers specify the number of root
-                files to be read in. Large is equivalent to 8. Medium is equivalent to 4. Small takes 200000 events.
-    --polarity  Used to specify the polarity of the magnet the user is interested in.
-                The argument must be one of: [up, down].
-                in the case it is not specified, the default path is the current working directory.
-    --binned_fit
-                Used to specify if the data should be binned before performing the fit or an unbinned fit should be performed.
-                Type either y or Y for a binned fit. Type n or N for an unbinned fit.
-    
+    --year          Used to specify the year at which the data was taken the user is interested in.
+                    The argument must be one of: [16, 17, 18]. These referr to 2016, 2017 & 2018, respectively.
+    --size          Used to specify the amount of events the user is interested in analysing.
+                    The argument must be one of: [large, small, medium, 1-8]. The integers specify the number of root
+                    files to be read in. Large is equivalent to 8. Medium is equivalent to 4. Small takes 200000 events.
+    --polarity      Used to specify the polarity of the magnet the user is interested in.
+                    The argument must be one of: [up, down].
+                    in the case it is not specified, the default path is the current working directory.
+    --binned_fit    Used to specify if the data should be binned before performing the fit or an unbinned fit should be performed.
+                    Type either y or Y for a binned fit. Type n or N for an unbinned fit.
+    --scheme        Used to specify which type of binning scheme should be used. 
+                    Argument must be one of: ["total","pT_eta","pT","eta"].
+    --bin           Used to determine which bin within the binning scheme is to be fit.
     Returns the parsed arguments.
     '''
     parser = argparse.ArgumentParser()
@@ -92,9 +93,8 @@ def parse_arguments():
         "--bin",
         type=str,
         required=False,
-        help="flag to set whether a binned or an unbinned should be performed (y/n)"
+        help="flag to deterine which bin within the phase space binning scheme is being fit"
     )
-    
     return parser.parse_args()
 def enableBinIntegrator(func, num_bins):
     """
@@ -116,7 +116,7 @@ def disableBinIntegrator(func):
 
 # - - - - - - - MAIN BODY - - - - - - - #
 args = parse_arguments()
-# Bin Parameters
+# Binned fit bin parameters
 numbins = 240
 lower_boundary = 1815
 upper_boundary = 1910
@@ -177,17 +177,18 @@ else:
     ttree_D0bar_down.SetBranchStatus("*", 0)
     ttree_D0bar_down.SetBranchStatus("D0_MM", 1)
 
+# Specifies the range for which the D0 invariant mass is to be distributed and assigns it to variable D0_M
+D0_M = ROOT.RooRealVar("D0_MM", r"D^{0} mass [MeVc^{-2}]", 1815, 1910)
 
-D0_M = ROOT.RooRealVar("D0_MM", "D0 mass / [MeV/c*c]", 1815, 1910)
-
-# Johnson SU Distribution
+# Binned fit signal model consists of a Johnson Su distribution and two Bifurcated Gaussian functions.
+# Johnson Su Distribution Parameters
 Jmu = RooRealVar("Jmu", "Jmu", 1865, 1860, 1870)
 Jlam = RooRealVar("Jlam", "Jlam", 18.7, 10, 20)
 Jgam = RooRealVar("Jgam", "Jgam", 0.36, 0, 10)
 Jdel = RooRealVar("Jdel", "Jdel", 1.55, 0, 10)
 Johnson = RooJohnson("Johnson","Johnson", D0_M, Jmu, Jlam, Jgam, Jdel)
 
-# Bifurcated Gaussian
+# Bifurcated Gaussian Parameters
 bifurmean = RooRealVar("bifurmean", "bifurmean", 1865.2, 1860, 1870)
 sigmaL =  RooRealVar("sigmaL", "sigmaL", 8.24, 0, 10)
 sigmaR = RooRealVar("sigmaR", "sigmaR", 6.1, 0, 10)
@@ -198,6 +199,21 @@ bifurmean2 = RooRealVar("bifurmean2", "bifurmean2", 1865.5, 1860, 1870)
 sigmaL2 =  RooRealVar("sigmaL2", "sigmaL2", 6, 0, 10)
 sigmaR2 = RooRealVar("sigmaR2", "sigmaR2", 8.49, 0, 10)
 bifurgauss2 = RooBifurGauss("Bifurgaussian2", "Bifurgaussian2", D0_M, bifurmean2, sigmaL2, sigmaR2)
+
+# Unbinned fit signal model consists of a Gaussian and Crystal Ball functions.
+# Model Gaussian
+mean = RooRealVar("mean", "mean", 1865, 1850, 1880)
+sigma = RooRealVar("sigma", "sigma", 7.37, 0, 20)
+gaussian = RooGaussian("gauss", "gauss", D0_M, mean, sigma)
+
+# Model CrystalBall
+Cmu = RooRealVar("Cmu", "Cmu", 1865.07, 1855, 1875)
+Csig = RooRealVar("Csig", "Csig", 10.65, 0, 20)
+aL = RooRealVar("aL", "aL", 1.77, -10, 10)
+nL = RooRealVar("nL", "nL", 9.5, -10, 40)
+aR = RooRealVar("aR", "aR", 3.73, -10, 10)
+nR = RooRealVar("nR", "nR", 29, -10, 50)
+crystal = RooCrystalBall("Crystal", "Crystal Ball", D0_M, Cmu, Csig, aL, nL, aR, nR)
 
 # Model Exponential Background
 a0 = RooRealVar("a0", "a0", -0.009, -1, 0)
