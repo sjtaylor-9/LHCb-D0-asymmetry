@@ -178,7 +178,7 @@ else:
     ttree_D0bar_down.SetBranchStatus("D0_MM", 1)
 
 # Specifies the range for which the D0 invariant mass is to be distributed and assigns it to variable D0_M
-D0_M = ROOT.RooRealVar("D0_MM", r"D^{0} mass [MeVc^{-2}]", 1815, 1910)
+D0_M = ROOT.RooRealVar("D0_MM", r"#it{D^{0}} mass [MeVc^{-2}]", 1815, 1910)
 
 # Binned fit signal model consists of a Johnson Su distribution and two Bifurcated Gaussian functions.
 # Johnson Su Distribution Parameters
