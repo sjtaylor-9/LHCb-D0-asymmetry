@@ -5,7 +5,7 @@ This code applies the given binning scheme to a set of data, and generates root 
 The year of interest, size of the data, polarity and meson to be analysed must be specified using the required flags --year --size --polarity --meson. There also are the flags --input --path and --bin_path, which are not required. These are used to specify the directory where the input data is located, where the binning scheme can be found and where the output file should be written, respectively. By default it is set to be the current working directory.
 It outputs the root files with the events in each individual bin, as well as a txt file with the number of events in each bin.
 
-Author: Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk)
+Authors: Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)/
 Last edited: 15th September 2023
 """
 
