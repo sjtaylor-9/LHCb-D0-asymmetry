@@ -233,7 +233,7 @@ frac_D0bar_up_2 = RooRealVar("frac_D0bar_up_2", "frac_D0bar_up_2", 0.4, 0, 1)
 frac_D0bar_down = RooRealVar("frac_D0bar_down", "frac_D0bar_down", 0.16, 0, 1)
 frac_D0bar_down_2 = RooRealVar("frac_D0bar_down_2", "frac_D0bar_down_2", 0.46, 0, 1)
 
-# Generate normalisation variables
+# Generate normalisation variables for the signal and background regions. The signal region has an initial guess of 95% of the area under the distribution.
 Nsig_D0_up = ROOT.RooRealVar("Nsig_D0_up", "Nsig_D0_up", 0.95*ttree_D0_up.GetEntries(), 0, ttree_D0_up.GetEntries())
 Nsig_D0bar_up = ROOT.RooRealVar("Nsig_D0bar_up", "Nsig_D0bar_up", 0.95*ttree_D0bar_up.GetEntries(), 0, ttree_D0bar_up.GetEntries())
 Nbkg_D0_up = ROOT.RooRealVar("Nbkg_D0_up", "Nbkg_D0_up", 0.05*ttree_D0_up.GetEntries(), 0, ttree_D0_up.GetEntries())
@@ -243,7 +243,7 @@ Nsig_D0bar_down = ROOT.RooRealVar("Nsig_D0bar_down", "Nsig_D0bar_down", 0.95*ttr
 Nbkg_D0_down = ROOT.RooRealVar("Nbkg_D0_down", "Nbkg_D0_down", 0.05*ttree_D0_down.GetEntries(), 0, ttree_D0_down.GetEntries())
 Nbkg_D0bar_down = ROOT.RooRealVar("Nbkg_D0bar_down", "Nbkg_D0bar_down", 0.05*ttree_D0bar_down.GetEntries(), 0, ttree_D0bar_down.GetEntries())
 
-
+# Binned Fit
 if binned:
     # Creating the histograms for both polarities for D0 and D0bar by converting the TTree D0_MM data inside the TChain to a TH1(base class of ROOT histograms)
     # TTree.Draw plots a histogram with name D0_Up_Hist and given bin parameters and saves it to memory using: >>
@@ -299,42 +299,35 @@ if binned:
     model_D0bar_down = RooAddPdf("model_D0bar_down", "model D0bar down", [signal_D0bar_down, background], [Nsig_D0bar_down, Nbkg_D0bar_down])
     simultaneous_pdf.addPdf(model_D0bar_down, "Binned_D0bar_down_sample")
 
-    # Recombine the data into a simultaneous dataset
+    # Recombine the data into a simultaneous data set
     imports = [ROOT.RooFit.Import("Binned_D0_up_sample", Binned_D0_up), ROOT.RooFit.Import("Binned_D0bar_up_sample", Binned_D0bar_up), ROOT.RooFit.Import("Binned_D0_down_sample", Binned_D0_down), ROOT.RooFit.Import("Binned_D0bar_down_sample", Binned_D0bar_down)]
     simultaneous_data = RooDataHist("simultaneous_data", "simultaneous data", RooArgList(D0_M), ROOT.RooFit.Index(binned_sample), *imports)
 
+    # enableBinIntegrator is used to eliminate biases for evaluating at the bin centres. A ROOT Tutotial can be found at :https://root.cern/doc/master/rf614__binned__fit__problems_8py.html
+    # enableBinIntegrator(model_D0_down, numbins)
     # Performs the simultaneous fit
-    enableBinIntegrator(model_D0_down, numbins)
     fitResult = simultaneous_pdf.fitTo(simultaneous_data, IntegrateBins = 1e-3, PrintLevel=-1, Save=True, Extended=True)
-    disableBinIntegrator(model_D0_down)
+    # disableBinIntegrator(model_D0_down)
+# Unbinned Fit
 else:
-    # Creates unbinned data containers for all the meson/polarity combinations
+    # Creates unbinned data containers for all the meson/polarity combinations.
     data_D0_up = RooDataSet("data_D0_up", "Data_D0_up", ttree_D0_up, RooArgSet(D0_M))
     data_D0bar_up = RooDataSet("data_D0bar_up", "Data_D0bar_up", ttree_D0bar_up, RooArgSet(D0_M))
     data_D0_down = RooDataSet("data_D0_down", "Data_D0_down", ttree_D0_down, RooArgSet(D0_M))
     data_D0bar_down = RooDataSet("data_D0bar_down", "Data_D0bar_down", ttree_D0bar_down, RooArgSet(D0_M))
 
+    # Creates the signal models.
     signal_D0_up = RooAddPdf("signal_D0_up", "signal_D0_up", RooArgList(gaussian, crystal), RooArgList(frac_D0_up))
     signal_D0_down = RooAddPdf("signal_D0_down", "signal_D0_down", RooArgList(gaussian, crystal), RooArgList(frac_D0_down))
     signal_D0bar_up = RooAddPdf("signal_D0bar_up", "signal_D0bar_up", RooArgList(gaussian, crystal), RooArgList(frac_D0bar_up))
     signal_D0bar_down = RooAddPdf("signal_D0bar_down", "signal_D0bar_down", RooArgList(gaussian, crystal), RooArgList(frac_D0bar_down))
-
-    # Generate normalization variables
-    Nsig_D0_up = ROOT.RooRealVar("Nsig_D0_up", "Nsig_D0_up", 0.95*ttree_D0_up.GetEntries(), 0, ttree_D0_up.GetEntries())
-    Nsig_D0bar_up = ROOT.RooRealVar("Nsig_D0bar_up", "Nsig_D0bar_up", 0.95*ttree_D0bar_up.GetEntries(), 0, ttree_D0bar_up.GetEntries())
-    Nbkg_D0_up = ROOT.RooRealVar("Nbkg_D0_up", "Nbkg_D0_up", 0.05*ttree_D0_up.GetEntries(), 0, ttree_D0_up.GetEntries())
-    Nbkg_D0bar_up = ROOT.RooRealVar("Nbkg_D0bar_up", "Nbkg_D0bar_up", 0.05*ttree_D0bar_up.GetEntries(), 0, ttree_D0bar_up.GetEntries())
-    Nsig_D0_down = ROOT.RooRealVar("Nsig_D0_down", "Nsig_D0_down", 0.95*ttree_D0_down.GetEntries(), 0, ttree_D0_down.GetEntries())
-    Nsig_D0bar_down = ROOT.RooRealVar("Nsig_D0bar_down", "Nsig_D0bar_down", 0.95*ttree_D0bar_down.GetEntries(), 0, ttree_D0bar_down.GetEntries())
-    Nbkg_D0_down = ROOT.RooRealVar("Nbkg_D0_down", "Nbkg_D0_down", 0.05*ttree_D0_down.GetEntries(), 0, ttree_D0_down.GetEntries())
-    Nbkg_D0bar_down = ROOT.RooRealVar("Nbkg_D0bar_down", "Nbkg_D0bar_down", 0.05*ttree_D0bar_down.GetEntries(), 0, ttree_D0bar_down.GetEntries())
 
     # Generate models
     model_D0_up = ROOT.RooAddPdf("model_D0_up", "model_D0_up", [signal_D0_up, background], [Nsig_D0_up, Nbkg_D0_up])
     model_D0bar_up = ROOT.RooAddPdf("model_D0bar_up", "model_D0bar_up", [signal_D0bar_up, background], [Nsig_D0bar_up, Nbkg_D0bar_up])
     model_D0_down = ROOT.RooAddPdf("model_D0_down", "model_D0_down", [signal_D0_down, background], [Nsig_D0_down, Nbkg_D0_down])
     model_D0bar_down = ROOT.RooAddPdf("model_D0bar_down", "model_D0bar_down", [signal_D0bar_down, background], [Nsig_D0bar_down, Nbkg_D0bar_down])
-
+    
     sample = ROOT.RooCategory("sample", "sample")
     sample.defineType("D0_up")
     sample.defineType("D0_down")
@@ -357,7 +350,8 @@ else:
 # Prints the simultaneous fit parameters
 fitResult.Print()
 
-# Get results
+# Outputs the fit parameters to a txt file
 parameters = np.array([a0.getValV(), frac_D0_down.getValV(), frac_D0_up.getValV(), frac_D0bar_down.getValV(), frac_D0bar_up.getValV(), Nsig_D0_down.getValV(), Nbkg_D0_down.getValV(), Nsig_D0_up.getValV(), Nbkg_D0_up.getValV(), Nsig_D0bar_down.getValV(), Nbkg_D0bar_down.getValV(), Nsig_D0bar_up.getValV(), Nbkg_D0bar_up.getValV(), sigmaL.getValV(), sigmaR.getValV(), sigmaL2.getValV(), sigmaR2.getValV(), frac_D0_down_2.getValV(), frac_D0_up_2.getValV(), frac_D0bar_down_2.getValV(), frac_D0bar_up_2.getValV(), Jmu.getValV(), Jlam.getValV(), Jgam.getValV(), Jdel.getValV(), bifurmean.getValV(), bifurmean2.getValV(),  Nsig_D0_down.getError(), Nsig_D0_up.getError(), Nsig_D0bar_down.getError(), Nsig_D0bar_up.getError()])
 np.savetxt(f"{args.path}/fit_parameters.txt", parameters, delimiter=',')
+# Prints how long the code took to run (used for binned vs unbinned run-time speed comparison)
 print("My program took", time.time() - start_time, "to run")
