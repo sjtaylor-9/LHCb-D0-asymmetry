@@ -6,7 +6,7 @@ The year of interest and size of the data to be analysed must be specified using
 It outputs the .pdf files containing the plots generated.
 
 Author: Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk)
-Last edited: 16th September 2023
+Last edited: 7th December 2023
 """
 
 # - - - - - - IMPORT STATEMENTS - - - - - - #
