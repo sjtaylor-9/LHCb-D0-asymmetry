@@ -1,5 +1,5 @@
 # D0 production asymmetry calculator using K-pi
-This project is aimed to calculating the production asymmetry of the D0 meson. This is done in differents regions of the phase space spanned by the transverse momentum and pseudorapidity of the D0 meson. This is the current version (5th November) of the code and the predominent focus has been to implement a binned fit in order to increase run time speeds by 2 orders of magnitude. This repository will be updated throughout the next 5 months. Currently, only the binned fit is functioning. The project was done in collaboration with Laxman Seelan.
+This project is aimed to calculating the production asymmetry of the D0 meson. This is done in differents regions of the phase space spanned by the transverse momentum and pseudorapidity of the D0 meson. This is the current version (7th December) of the code and the predominent focus has been to implement a binned fit in order to increase run time speeds by 2 orders of magnitude. This repository will be updated throughout the next 5 months. Currently, only the binned fit is functioning. The project was done in collaboration with Laxman Seelan.
 
 In this repository there are the necessary tools in order to:
  - Make a selection of the events given a certain criteria
@@ -45,4 +45,4 @@ This should produce the same output as shown in the folder *example* (still to b
 A large amount of the scripts uses or is inspired by the code written by Camille Jarvis-Stiggants and Michael England during their MPhys project and Marc Oriol Pérez in his summer internship.
 
 
-**Authors:** Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)/ **Last modified:** 5th November 2023
+**Authors:** Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)/ **Last modified:** 7th December 2023
