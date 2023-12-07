@@ -44,6 +44,7 @@ def parse_arguments():
     --scheme        Used to specify which type of binning scheme should be used. 
                     Argument must be one of: ["total","pT_eta","pT","eta"].
     --bin           Used to determine which bin within the binning scheme is to be fit.
+    
     Returns the parsed arguments.
     '''
     parser = argparse.ArgumentParser()
