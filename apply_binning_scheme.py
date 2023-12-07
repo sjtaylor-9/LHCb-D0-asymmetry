@@ -33,7 +33,7 @@ def parse_arguments():
                 The argument must be one of: [up, down].
     --meson     Used to specify the meson the user is interested in.
                 The argument must be one of: [D0, D0bar, both].
-    --path      Used to specify the directory in which the output files should be written. It is not required,
+    --path      Used to specify the directory in which the root files should be written. It is not required,
                 in the case it is not specified, the default path is the current working directory.
     --input     Used to specify the directory in which the input data should be found. It is not required,
                 in the case it is not specified, the default path is the current working directory.
@@ -115,6 +115,7 @@ if args.meson=="both":
 else:
     data = uproot.concatenate(f"{args.input}/{args.meson}_{args.polarity}_data_{args.year}_{args.size}_clean.root:{tree_name}")
 
+# Loads in txt of the binning scheme
 bins = np.loadtxt(f"{args.bin_path}/{args.year}_{args.size}_bins.txt", delimiter=',')
 bins_pT = np.loadtxt(f"{args.bin_path}/{args.year}_{args.size}_pT_bins.txt", delimiter=',')
 bins_eta = np.loadtxt(f"{args.bin_path}/{args.year}_{args.size}_eta_bins.txt", delimiter=',')
@@ -130,6 +131,7 @@ length = len(data["D0_PT"])
 # iterate through all bins
 for i in np.arange(0, 10):
     pT_mask = np.ones(length)
+    # masks between the bins
     pT_mask = np.logical_and(pT_mask, data["D0_PT"]>bins[0,i])
     pT_mask = np.logical_and(pT_mask, data["D0_PT"]<=bins[0,i+1])
     for j in np.arange(0,10):
