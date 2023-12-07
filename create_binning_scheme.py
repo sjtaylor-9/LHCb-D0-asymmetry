@@ -3,7 +3,7 @@ create_binning_scheme.py
 
 This code calculates the best boundary positions in  order to generete the bins. It first splits the data in 10 sets according using the transverse momentum of each event, and makes sure the number of events in each set is the same. This exact same procedure is then repeated for each of these sets butnow using the pseudorapidity. Therefore, the result are 100 sets of data with an equal number of events. The boundaries calculated by this code are naturally calculated using data from both mesons and both polarities.
 The year of interest and size of the data to be analysed must be specified using the required flags --year --size. There also are the flags --input and --path, which are not required. These are used to specify the directory where the input data is located and where the output file should be written, respectively. By default it is set to be the current working directory.
-It outputs the values of transverse momentum and pseudorapidity at each of the boundaries of the bins.
+It outputs the values of transverse momentum and pseudorapidity at each of the boundaries of the bins. The code also calculates the best boundary position for 10 eta bins and 10 pT bins seperately.
 
 Author: Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk)
 Last edited: 15th September 2023
