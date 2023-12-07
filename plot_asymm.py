@@ -5,7 +5,7 @@ This code plots relevant histograms to show the event distribution across the ph
 The year of interest, size of the data, polarity and meson to be analysed must be specified using the required flags --year --size --polarity --meson. There also are the flags --input --path --asymm_path and --bin_path,which are not required. These are used to specify the directory where the input data is located, where the binning scheme can be found and where the output file should be written, respectively. By default it is set to be the current working directory.
 It outputs several pdf files containing the relevant histograms.
 
-Author: Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk)
+Authors: Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)/
 Last edited: 15th September 2023
 """
 # - - - - - - IMPORT STATEMENTS - - - - - - #
@@ -116,6 +116,7 @@ args = parse_arguments()
 unbinned_asymm, binned_asymm = read_asymmetry_values()
 
 asymmetry = []
+#Read in asymmetry values for each bin
 for j in range(0,10):
     for i in range (0,10):
         bin_num = str(j)+str(i)
@@ -127,7 +128,6 @@ for j in range(0,10):
         asymmetry.append(A_prod)
 
 max_value = -min(asymmetry)
-print(max_value)
 min_value = min(asymmetry)
 
 
@@ -249,7 +249,7 @@ h2d = ax.hist2d(
     range=[[x[9][0], x_max], [y_min, y_max]]
 )
 
-
+# Sets axes and colourbar
 ax.set_xlabel(r'$p_{T}$ [GeV$c^{-1}$]', fontsize=16, labelpad=4)
 ax.set_ylabel(r'$\eta$', fontsize=16)
 ax.set_xlim(x_min, x_max)
@@ -273,6 +273,7 @@ for index in np.arange(0,10):
     for j in np.arange(0,10):
         if j!=0:
             ax.axhline(bins[index+1, j], xmin=(bins[0,index]-2)/8, xmax=(bins[0,index+1]-2)/8, color='black', linestyle = 'dashdot',linewidth = 1 )
-    
+
+# Saves Figure
 plt.savefig(f'{args.path}/2DHist_{args.year}_{args.size}.pdf', bbox_inches = "tight")
 print("Saved 2D Hist")
