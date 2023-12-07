@@ -36,7 +36,11 @@ def parse_arguments():
                 in the case it is not specified, the default path is the current working directory.
     --input     Used to specify the directory in which the input data should be found. It is not required,
                 in the case it is not specified, the default path is the current working directory. 
+    --blind     Flag to indicate whether the asymmetry should be blinded
     --seedval   Used to set a set a seed for the blinding.
+    --results_path Used to specify the directory in which the result files should be written. It is not required,
+                in the case it is not specified, the default path is the current working directory.
+    --scheme    Flag indicating which type of binning scheme is used. It is required.
     
     Returns the parsed arguments.
     '''
@@ -143,6 +147,9 @@ def get_yield(bin_num, scheme):
 
 
 def A_Det():
+    """
+    Calculates A_Det and returns A_det_up, A_det_down, A_det_down_error, A_det_up_error
+    """
       # Detector asymmetry for D0(Kpi) = A_raw(D+->K-pi+pi+) - A_raw(D+->Ks0pi+) - A(Ks0)
         # Running the program AsymmetryTools from GitLab over PuTTY outputs the following:
         if options.year == 16:
@@ -254,7 +261,9 @@ def blind(A_raw, A_raw_error, string):
 
 
 def production_asymm(A_raw_up, A_raw_down, A_raw_up_err, A_raw_down_err, A_det_up, A_det_down, A_det_down_err, A_det_up_err):
-    
+    """
+    Calculates production asymmetry given raw asymmetry and returns A_prod, A_prod_up, A_prod_down, A_prod_up_err, A_prod_down_err, A_prod_err
+    """
     A_prod_up = A_raw_up - A_det_up
     A_prod_down = A_raw_down - A_det_down
 
@@ -270,7 +279,9 @@ def production_asymm(A_raw_up, A_raw_down, A_raw_up_err, A_raw_down_err, A_det_u
 
 
 def integrated_asym(val, err):
-    
+    """
+    Does a weighted mean of the 100/10 values of asymmetry
+    """
     weight = [x**-2 for x in err]
     weight = np.array(weight)
     val = np.array(val)
@@ -287,7 +298,9 @@ def integrated_asym(val, err):
 
 
 def A_prod_unbinned():
-
+    """
+    A prod for the global intergrated asymmetry
+    """
     yield_D0_up = read_from_file_global("D0", "up")
     yield_D0bar_up = read_from_file_global("D0bar", "up")
     yield_D0_down = read_from_file_global("D0", "down")
@@ -327,6 +340,7 @@ A_raw_down_err_list = []
 A_prod_unbinned = A_prod_unbinned()
 
 if scheme == 'pT_eta':
+    # pT_eta has 100 bins
     for j in range(0,10):
         for i in range (0,10):
             scheme = 'local'
@@ -360,6 +374,7 @@ if scheme == 'pT_eta':
                 # Calculating Unblind prod Asymetry of each bin
                 # output results
                 output_results(A_raw, A_raw_err, A_raw_up, A_raw_up_err, A_raw_down, A_raw_down_err, bin_num, A_prod_bin[0], A_prod_bin[5])
+                # Appending results to list
                 A_raw_up_list_blinded.append(A_raw_up)
                 A_raw_down_list_blinded.append(A_raw_down)
                 A_raw_up_list_unblinded.append(A_unblind_up)
@@ -378,6 +393,7 @@ if scheme == 'pT_eta':
 
             # Calculates A_det
 elif scheme == 'pT' or scheme == 'eta':
+    #pT/eta has 10 bins
     for j in range(0,10):
         bin_num = str(j)
         # get normalization yield from desired model 
