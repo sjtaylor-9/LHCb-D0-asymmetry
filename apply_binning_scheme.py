@@ -115,9 +115,16 @@ if args.meson=="both":
 else:
     data = uproot.concatenate(f"{args.input}/{args.meson}_{args.polarity}_data_{args.year}_{args.size}_clean.root:{tree_name}")
 
-bins = np.loadtxt(f"{args.bin_path}/{args.year}_{args.size}_bins.txt", delimiter=',')                          
+bins = np.loadtxt(f"{args.bin_path}/{args.year}_{args.size}_bins.txt", delimiter=',')
+bins_pT = np.loadtxt(f"{args.bin_path}/{args.year}_{args.size}_pT_bins.txt", delimiter=',')
+bins_eta = np.loadtxt(f"{args.bin_path}/{args.year}_{args.size}_eta_bins.txt", delimiter=',')
+
 # select particles with pT below 10 GeV/c
 nevents=np.empty(0)
+nevents_pT =np.empty(0)
+nevents_eta =np.empty(0)
+
+
 length = len(data["D0_PT"])
 
 # iterate through all bins
@@ -133,9 +140,9 @@ for i in np.arange(0, 10):
         nevents = np.append(nevents, len(selected_data["D0_PT"]))
         # Write out bin
         if args.meson=="both":
-            out_file_name = f"{args.path}/{args.polarity}_{args.year}_{args.size}_bin{j}{i}.root"
+            out_file_name = f"{args.path}/local/{args.polarity}_{args.year}_{args.size}_bin{j}{i}.root"
         else:
-            out_file_name = f"{args.path}/{args.meson}_{args.polarity}_{args.year}_{args.size}_bin{j}{i}.root"
+            out_file_name = f"{args.path}/local/{args.meson}_{args.polarity}_{args.year}_{args.size}_bin{j}{i}.root"
         out_tree = "D02Kpi_Tuple/DecayTree"
         print(f"Writing to {out_file_name}...")
         out_file = uproot.recreate(out_file_name)
@@ -144,5 +151,45 @@ for i in np.arange(0, 10):
         out_file[out_tree].extend({branch: selected_data[branch] for branch in branches.keys()})
         out_file.close()
 
+#Creating root files for pT
+for i in np.arange(0, 10):
+    pT_mask = np.ones(length)
+    pT_mask = np.logical_and(pT_mask, data["D0_PT"]>bins_pT[i])
+    pT_mask = np.logical_and(pT_mask, data["D0_PT"]<=bins_pT[i+1])
+    selected_data = data[pT_mask]
+    nevents_pT = np.append(nevents_pT, len(selected_data["D0_PT"]))
+    if args.meson=="both":
+        out_file_name = f"{args.path}/pT/{args.polarity}_{args.year}_{args.size}_bin{i}.root"
+    else:
+        out_file_name = f"{args.path}/pT/{args.meson}_{args.polarity}_{args.year}_{args.size}_bin{i}.root"
+    out_tree = "D02Kpi_Tuple/DecayTree"
+    print(f"Writing to {out_file_name}...")
+    out_file = uproot.recreate(out_file_name)
+    branches = {column: ak.type(selected_data[column]) for column in selected_data.fields}
+    out_file.mktree(out_tree, branches)
+    out_file[out_tree].extend({branch: selected_data[branch] for branch in branches.keys()})
+    out_file.close()
+
+# Create root files for eta 
+for i in np.arange(0, 10):
+    eta_mask = np.ones(length)
+    eta_mask = np.logical_and(eta_mask, data["D0_ETA"]>bins_eta[i])
+    eta_mask = np.logical_and(eta_mask, data["D0_ETA"]<=bins_eta[i+1])
+    selected_data = data[eta_mask]
+    nevents_eta = np.append(nevents_eta, len(selected_data["D0_ETA"]))
+    if args.meson=="both":
+        out_file_name = f"{args.path}/eta/{args.polarity}_{args.year}_{args.size}_bin{i}.root"
+    else:
+        out_file_name = f"{args.path}/eta/{args.meson}_{args.polarity}_{args.year}_{args.size}_bin{i}.root"
+    out_tree = "D02Kpi_Tuple/DecayTree"
+    print(f"Writing to {out_file_name}...")
+    out_file = uproot.recreate(out_file_name)
+    branches = {column: ak.type(selected_data[column]) for column in selected_data.fields}
+    out_file.mktree(out_tree, branches)
+    out_file[out_tree].extend({branch: selected_data[branch] for branch in branches.keys()})
+    out_file.close()
+
 # write out number of events in each bin
 np.savetxt(f"{args.bin_path}/number_of_events_{args.meson}_{args.polarity}_{args.year}_{args.size}.txt", nevents, delimiter=',')
+np.savetxt(f"{args.bin_path}/number_of_events_pT_{args.meson}_{args.polarity}_{args.year}_{args.size}.txt", nevents_pT, delimiter=',')
+np.savetxt(f"{args.bin_path}/number_of_events_eta_{args.meson}_{args.polarity}_{args.year}_{args.size}.txt", nevents_eta, delimiter=',')
