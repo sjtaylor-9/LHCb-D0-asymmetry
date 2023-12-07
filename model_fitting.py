@@ -54,7 +54,8 @@ def parse_arguments():
                         in the case it is not specified, the default path is the current working directory.
     --binned_fit        Used to specify if the data should be binned before performing the fit or an unbinned fit should be performed.
                         Type either y or Y for a binned fit. Type n or N for an unbinned fit.
-    --scheme            Used to 
+    --scheme            Used to specify which type of binning scheme should be used. 
+                        Argument must be one of: ["total","pT_eta","pT","eta"]. 
     
     Returns the parsed arguments.
     '''
