@@ -11,7 +11,6 @@ Last edited: 7th December 2023
 """
 
 # - - - - - - IMPORT STATEMENTS - - - - - - #
-
 import ROOT
 import argparse
 import os
@@ -148,23 +147,30 @@ def disableBinIntegrator(func):
     func.setIntegratorConfig()
     func.forceNumInt(False)
 def gaussian(x, A, mu, sig):
+    """
+    Defines a Gaussian function, which is used to how close the pull distribution is to a standard Normal distribution.
+    """
     return A * np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 # - - - - - - - MAIN BODY - - - - - - - #
-
 options = parse_arguments()
+# Defines the bin parameters to be used in the binned fit.
 numbins = 240
 lower_boundary = 1815
 upper_boundary = 1910
+# Assigns variables to the meson and polarity parsers.
 meson = options.meson
 polarity = options.polarity
+# Capitalises to "U" in "up" and to "D" in "down".
 polarity = polarity[0].upper() + polarity[1:]
 
+# If the code is to be ran for individual bins across the phase space then the plot_type includes the bin number.
 if options.scheme == "eta" or options.scheme == "pT" or options.scheme == "pT_eta":
     plot_type = f"20{options.year} Mag{polarity} Bin{options.bin}"
+# If the code is ran as a global model then plot_type contains only the polarity and meson parsers.
 else:
     plot_type = f"20{options.year} Mag{polarity}"
 
-
+# Determines if a binned fit is to be performed.
 if options.binned_fit=="y" or options.binned_fit=="Y":
     binned = True
 else:
