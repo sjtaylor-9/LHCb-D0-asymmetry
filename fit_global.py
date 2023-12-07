@@ -2,7 +2,8 @@
 fit_global.py
 
 This code is used to perform a global fit on the selected data. In order to do so a simulatenous fit is done on the four datasets (with different mesons and polarities). This simulatenous fit keeps all variables constant across the four fits except for the normalisation constants which are allowed to vary independently. The unbinned fit model consists of a Crystal Ball function and a Gaussian distribution to model the signal and an Exponential decay to model the background.
-The binned fit model consists of a Johnson Su distribution and two Bifurcated Gaussian functions and an exponential background function. The year of interest and size of the data to be analysed must be specified using the required flags --year --size. It is necessary to specify if the fit should be performed on the binned data or the unbinned data using the flag --binned_fit. There is a flag --path, which is not required. This one is used to specify the directory where the input data is located, and where the output file should be written. By default it is set to be the current working directory.
+The binned fit model consists of a Johnson Su distribution and two Bifurcated Gaussian functions and an exponential background function. There is a systematic uncertainty assigned with the choice of model, hence the binned fit model chosen to assign to this systematic uncertainty consists of a Johnson Su distribution, a Gaussian function and a Bifurcated Gaussian function.
+The year of interest and size of the data to be analysed must be specified using the required flags --year --size. It is necessary to specify if the fit should be performed on the binned data or the unbinned data using the flag --binned_fit. There is a flag --path, which is not required. This one is used to specify the directory where the input data is located, and where the output file should be written. By default it is set to be the current working directory.
 It outputs the value of the constants shared in the simultaneous fit to a text file. This code is inspired by Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk), however it has been redesigned so that the binned fit is succesfully performed.
 
 Author: Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)
@@ -182,11 +183,12 @@ else:
 D0_M = ROOT.RooRealVar("D0_MM", r"#it{D^{0}} mass [MeVc^{-2}]", 1815, 1910)
 
 # Binned fit signal model consists of a Johnson Su distribution and two Bifurcated Gaussian functions.
+# Binned fit signal model used for calculating the systematic uncetainty consists of a Johnson Su distribution, a Gaussian function and a Bifurcated Gaussian function.
 # Johnson Su Distribution Parameters
 Jmu = RooRealVar("Jmu", "Jmu", 1865, 1860, 1870)
-Jlam = RooRealVar("Jlam", "Jlam", 18.7, 10, 20)
-Jgam = RooRealVar("Jgam", "Jgam", 0.36, 0, 10)
-Jdel = RooRealVar("Jdel", "Jdel", 1.55, 0, 10)
+Jlam = RooRealVar("Jlam", "Jlam", 18.7, 10, 20) # Optimal model has intial guess of 18.7, systematic uncertainty model has initial guess of 16.3
+Jgam = RooRealVar("Jgam", "Jgam", 0.36, 0, 10) # Optimal model has intial guess of 0.36, systematic uncertainty model has initial guess of 0.3
+Jdel = RooRealVar("Jdel", "Jdel", 1.55, 0, 10) # Optimal model has intial guess of 1.55, systematic uncertainty model has initial guess of 1.6
 Johnson = RooJohnson("Johnson","Johnson", D0_M, Jmu, Jlam, Jgam, Jdel)
 
 # Bifurcated Gaussian Parameters
@@ -209,12 +211,11 @@ gaussian = RooGaussian("gauss", "gauss", D0_M, mean, sigma)
 
 # Model CrystalBall
 Cmu = RooRealVar("Cmu", "Cmu", 1865.07, 1855, 1875)
-Csig = RooRealVar("Csig", "Csig", 10.65, 0, 20)
+Csig = RooRealVar("Csig", "Csig", 10.65, 0, 100)
 aL = RooRealVar("aL", "aL", 1.77, -10, 10)
-nL = RooRealVar("nL", "nL", 9.5, -10, 40)
+nL = RooRealVar("nL", "nL", 9.5, -10, 10)
 aR = RooRealVar("aR", "aR", 3.73, -10, 10)
-nR = RooRealVar("nR", "nR", 29, -10, 50)
-crystal = RooCrystalBall("Crystal", "Crystal Ball", D0_M, Cmu, Csig, aL, nL, aR, nR)
+nR = RooRealVar("nR", "nR", 4.34, -10, 10)
 
 # Model Exponential Background
 a0 = RooRealVar("a0", "a0", -0.009, -1, 0)
@@ -222,17 +223,17 @@ background = RooExponential("exponential", "exponential", D0_M, a0)
 
 # Ratio of signal intensities between each model. For N PDFs need N-1 fractions 
 # DO MagUp
-frac_D0_up = RooRealVar("frac_D0_up", "frac_D0_up", 0.16, 0, 1)
-frac_D0_up_2 = RooRealVar("frac_D0_up_2", "frac_D0_up_2", 0.4, 0, 1)
+frac_D0_up = RooRealVar("frac_D0_up", "frac_D0_up", 0.16, 0, 1) # Optimal model has intial guess of 0.16, systematic uncertainty model has initial guess of 0.44, unbinned model has initial guess of 0.567
+frac_D0_up_2 = RooRealVar("frac_D0_up_2", "frac_D0_up_2", 0.4, 0, 1) # Optimal model has intial guess of 0.4, systematic uncertainty model has initial guess of 0.42
 # D0 MagDown
-frac_D0_down = RooRealVar("frac_D0_down", "frac_D0_down", 0.17, 0, 1)
-frac_D0_down_2 = RooRealVar("frac_D0_down_2", "frac_D0_down_2", 0.45, 0, 1)
+frac_D0_down = RooRealVar("frac_D0_down", "frac_D0_down", 0.17, 0, 1) # Optimal model has intial guess of 0.17, systematic uncertainty model has initial guess of 0.38, unbinned model has initial guess of 0.567
+frac_D0_down_2 = RooRealVar("frac_D0_down_2", "frac_D0_down_2", 0.45, 0, 1) # Optimal model has intial guess of 0.45, systematic uncertainty model has initial guess of 0.46
 # D0bar MagUp2
-frac_D0bar_up = RooRealVar("frac_D0bar_up", "frac_D0bar_up", 0.16, 0, 1)
-frac_D0bar_up_2 = RooRealVar("frac_D0bar_up_2", "frac_D0bar_up_2", 0.4, 0, 1)
+frac_D0bar_up = RooRealVar("frac_D0bar_up", "frac_D0bar_up", 0.16, 0, 1) # Optimal model has intial guess of 0.16, systematic uncertainty model has initial guess of 0.46, unbinned model has initial guess of 0.567
+frac_D0bar_up_2 = RooRealVar("frac_D0bar_up_2", "frac_D0bar_up_2", 0.4, 0, 1) # Optimal model has intial guess of 0.4, systematic uncertainty model has initial guess of 0.42
 # D0bar MagDown
-frac_D0bar_down = RooRealVar("frac_D0bar_down", "frac_D0bar_down", 0.16, 0, 1)
-frac_D0bar_down_2 = RooRealVar("frac_D0bar_down_2", "frac_D0bar_down_2", 0.46, 0, 1)
+frac_D0bar_down = RooRealVar("frac_D0bar_down", "frac_D0bar_down", 0.16, 0, 1) # Optimal model has intial guess of 0.16, systematic uncertainty model has initial guess of 0.38, unbinned model has initial guess of 0.567
+frac_D0bar_down_2 = RooRealVar("frac_D0bar_down_2", "frac_D0bar_down_2", 0.46, 0, 1) # Optimal model has intial guess of 0.46, systematic uncertainty model has initial guess of 0.47
 
 # Generate normalisation variables for the signal and background regions. The signal region has an initial guess of 95% of the area under the distribution.
 Nsig_D0_up = ROOT.RooRealVar("Nsig_D0_up", "Nsig_D0_up", 0.95*ttree_D0_up.GetEntries(), 0, ttree_D0_up.GetEntries())
