@@ -102,6 +102,13 @@ done
 echo "The data has been binned"
 echo
 
+for ind in {0..99}
+do
+    index=$( printf '%02d' $ind)
+    python fit_global.py --year $year --size $size --path $directory"/model_fitting/local/"$index --binned_fit $binned --input $directory"/binned_data/local" --bin $index --scheme 'pT_eta'
+    echo "Fitted Bin "$index
+done
+
 for meson in D0 D0bar
 do
    for polar in up down
@@ -109,7 +116,6 @@ do
         for ind in {0..99}
         do
             index=$( printf '%02d' $ind)
-            python fit_global.py --year $year --size $size --path $directory"/model_fitting/local/"$index --binned_fit $binned --input $directory"/binned_data/local" --bin $index --scheme 'pT_eta'
             python model_fitting.py --year $year --size $size --meson $meson --polarity $polar  --path $directory"/model_fitting/local/"$index --input $directory"/binned_data/local" --parameters_path $directory"/model_fitting/local/"$index --bin $index --binned_fit $binned --scheme 'pT_eta'
         done
     done
@@ -124,6 +130,14 @@ python production_asymmetry.py --year $year --size $size --path $directory"/raw_
 
 python plot_asymm.py --year $year --size $size --bin_path $directory"/binned_data/binning_scheme" --asymm_path $directory"/raw_asymmetry_outcome/raw_asymmetry/local" --path $directory"/results"
 
+for ind in {0..9}
+do
+    index=$( printf '%01d' $ind)
+    python fit_global.py --year $year --size $size --path $directory"/model_fitting/pT/"$index --binned_fit $binned --input $directory"/binned_data/pT" --bin $index --scheme 'pT'
+    python fit_global.py --year $year --size $size --path $directory"/model_fitting/eta/"$index --binned_fit $binned --input $directory"/binned_data/eta" --bin $index --scheme 'eta'
+
+    echo "Fitted Bin "$index
+done
 
 for meson in D0 D0bar
 do
@@ -132,9 +146,6 @@ do
         for ind in {0..9}
         do
             index=$( printf '%01d' $ind)
-            python fit_global.py --year $year --size $size --path $directory"/model_fitting/pT/"$index --binned_fit $binned --input $directory"/binned_data/pT" --bin $index --scheme 'pT'
-            python fit_global.py --year $year --size $size --path $directory"/model_fitting/eta/"$index --binned_fit $binned --input $directory"/binned_data/eta" --bin $index --scheme 'eta'
-
             python model_fitting.py --year $year --size $size --meson $meson --polarity $polar  --path $directory"/model_fitting/pT/"$index --input $directory"/binned_data/pT" --parameters_path $directory"/model_fitting/pT"$index --bin $index --binned_fit $binned --scheme 'pT'
             python model_fitting.py --year $year --size $size --meson $meson --polarity $polar  --path $directory"/model_fitting/eta/"$index --input $directory"/binned_data/eta" --parameters_path $directory"/model_fitting/pT"$index --bin $index --binned_fit $binned --scheme 'eta'
         done
