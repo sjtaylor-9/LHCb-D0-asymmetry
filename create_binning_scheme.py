@@ -5,7 +5,7 @@ This code calculates the best boundary positions in  order to generete the bins.
 The year of interest and size of the data to be analysed must be specified using the required flags --year --size. There also are the flags --input and --path, which are not required. These are used to specify the directory where the input data is located and where the output file should be written, respectively. By default it is set to be the current working directory.
 It outputs the values of transverse momentum and pseudorapidity at each of the boundaries of the bins. The code also calculates the best boundary position for 10 eta bins and 10 pT bins seperately.
 
-Author: Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk)
+Authors: Sam Taylor (samuel.taylor-9@student.manchester.ac.uk) and Laxman Seelan (laxman.seelan@student.manchester.ac.uk)/
 Last edited: 15th September 2023
 """
 
