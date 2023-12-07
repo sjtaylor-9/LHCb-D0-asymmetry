@@ -194,16 +194,20 @@ parameters = np.loadtxt(f"{options.parameters_path}/fit_parameters.txt", delimit
 
 ttree.SetBranchStatus("*", 0)
 ttree.SetBranchStatus("D0_MM", 1)
-D0_M = RooRealVar("D0_MM", f"D0 mass / [MeVc^{-2}]", 1815, 1910) # Data - invariant mass
+D0_M = RooRealVar("D0_MM", r"#it{D^{0}} mass [MeVc^{-2}]", 1815, 1910) # Data - invariant mass
 
 # Define variables for signal model, using the best fit parameters generated from fit_global.py
+# The optimal binned fit signal model uses a Johnson Su distribution and two Bifurcated Gaussian functions.
+# The binned fit signal model used to find the systematic uncertainty is Johnon Su distribution, a Gaussian function and a Bifurcated Gaussian function.
+# The unbinned fit signal model uses a Gaussian function and a Crystal Ball function.
+
 # Model Bifurcated Gaussian
 bifurmean = RooRealVar("bifurmean", "bifurmean", parameters[25])
 sigmaL = RooRealVar("sigmaL", "sigmaL", parameters[13])
 sigmaR = RooRealVar("sigmaR", "sigmaR", parameters[14])
 Bifurgauss = RooBifurGauss("Bifurgauss", "Bifurgauss", D0_M, bifurmean, sigmaL, sigmaR)
 
-# Model Johnson SU Distribution
+# Model Johnson Su Distribution
 Jmu = RooRealVar("Jmu", "Jmu", parameters[21])
 Jlam = RooRealVar("Jlam", "Jlam", parameters[22])
 Jgam = RooRealVar("Jgam", "Jgam", parameters[23])
@@ -216,10 +220,25 @@ sigmaL2 = RooRealVar("sigmaL2", "sigmaL2", parameters[15])
 sigmaR2 = RooRealVar("sigmaR2", "sigmaR2", parameters[16])
 Bifurgauss2 = RooBifurGauss("Bifurgauss2", "Bifurgauss", D0_M, bifurmean2, sigmaL2, sigmaR2)
 
+# Model Gaussian
+mean = RooRealVar("mean", "mean", parameters[27])
+sigma = RooRealVar("sigma", "sigma", parameters[28])
+gauss = RooGaussian("Gaussian", "Gaussian", D0_M, mean, sigma)
+
+# Model CrystalBall
+Cmu = RooRealVar("Cmu", "Cmu", parameters[29])
+Csig = RooRealVar("Csig", "Csig", parameters[30])
+aL = RooRealVar("aL", "aL", parameters[31])
+nL = RooRealVar("nL", "nL", parameters[32])
+aR = RooRealVar("aR", "aR", parameters[33])
+nR = RooRealVar("nR", "nR", parameters[34])
+crystal = RooCrystalBall("Crystal", "Crystal Ball", D0_M, Cmu, Csig, aL, nL, aR, nR)
+
 # Model Exponential Background
 a = RooRealVar("a0", "a0", parameters[0])
 background = RooExponential("Exponential", "Exponential", D0_M, a)
 
+# Reads in the frac and normalisation parameters relative to the chosen meson-polarity combination
 if options.meson == "D0":
     # D0 MagDown
     if options.polarity == "down":
