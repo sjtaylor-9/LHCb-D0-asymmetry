@@ -2,7 +2,7 @@
 """
 production_asymmetry.py
 
-This code is used to process the signal normalization yields and obtain the production asymmetries of the average bins and global integrated. It also uses the input from using another signal model to obtain the systematic uncertainty due to the fit model. It finally outputs the results obtained both to the secreen and to a .txt file.
+This code is used to process the signal normalization yields and obtain the production asymmetries of the average bins and global integrated. It finally outputs the results obtained both to the secreen and to a .txt file.
 The year of interest and size of the data to be analysed must be specified using the required flags --year --size --scheme --blind. There also are the flags --input --seedval --path which are not required. These are used to specify the directory where the input data is located and where the output file should be written, respectively. By default it is set to be the current working directory.
 This code is  inspired on the work of Camille Jarvis-Stiggants and Michael England and Marc Oriol Pérez. The code has been completely rewritten and reorganised, and some features have been added to add flexibility to the code, but some of the original functions have been used here as well.
 
@@ -74,26 +74,26 @@ def parse_arguments():
         help="flag to set the path where the input data should be found"
     )
     parser.add_argument(
-    "--blind",
-    type=str,
-    required=True,
-    choices=["y", "Y", "n", "N"],
-    help="flag to set whether the asymmetry should be blinded or not (y/n)."
+        "--blind",
+        type=str,
+        required=True,
+        choices=["y", "Y", "n", "N"],
+        help="flag to set whether the asymmetry should be blinded or not (y/n)."
     )
     parser.add_argument(
-    "--seedval",
-    type=int,
-    required=False,
-    default=12,
-    help="input any number or word to set a seed for the blinding."
+        "--seedval",
+        type=int,
+        required=False,
+        default=12,
+        help="input any number or word to set a seed for the blinding."
     )
     
     parser.add_argument(
-            "--results_path",
-            type=dir_path,
-            required=False,
-            default=os.getcwd(),
-            help="flag to set the path where the final production asymmetry should be saved."
+        "--results_path",
+        type=dir_path,
+        required=False,
+        default=os.getcwd(),
+        help="flag to set the path where the final production asymmetry should be saved."
     )
     parser.add_argument(
         "--scheme",
@@ -152,44 +152,44 @@ def A_Det():
     """
       # Detector asymmetry for D0(Kpi) = A_raw(D+->K-pi+pi+) - A_raw(D+->Ks0pi+) - A(Ks0)
         # Running the program AsymmetryTools from GitLab over PuTTY outputs the following:
-        if options.year == 16:
-            A_kspi_up = -0.87534228056
-            A_kspi_err_up = 0.265077797764
+    if options.year == 16:
+        A_kspi_up = -0.87534228056
+        A_kspi_err_up = 0.265077797764
 
-            A_kpipi_up = -1.35398359189
-            A_kpipi_err_up = 0.13115828851
+        A_kpipi_up = -1.35398359189
+        A_kpipi_err_up = 0.13115828851
 
-            A_kspi_down = -0.355750007642
-            A_kspi_err_down = 0.247579432594
+        A_kspi_down = -0.355750007642
+        A_kspi_err_down = 0.247579432594
 
-            A_kpipi_down = -0.637694362926
-            A_kpipi_err_down = 0.123796822258
+        A_kpipi_down = -0.637694362926
+        A_kpipi_err_down = 0.123796822258
 
-        elif options.year == 17:
-            A_kspi_up = -0.654235263918
-            A_kspi_err_up = 0.273509295656
+    elif options.year == 17:
+        A_kspi_up = -0.654235263918
+        A_kspi_err_up = 0.273509295656
 
-            A_kpipi_up = -1.38335612668
-            A_kpipi_err_up = 0.121595927374
+        A_kpipi_up = -1.38335612668
+        A_kpipi_err_up = 0.121595927374
 
-            A_kspi_down = -0.126746550532
-            A_kspi_err_down = 0.269402552773
+        A_kspi_down = -0.126746550532
+        A_kspi_err_down = 0.269402552773
 
-            A_kpipi_down = -1.02345488078
-            A_kpipi_err_down = 0.127466759335
+        A_kpipi_down = -1.02345488078
+        A_kpipi_err_down = 0.127466759335
 
-        elif options.year == 18:
-            A_kspi_up = -0.942058542057
-            A_kspi_err_up = 0.270644276803
+    elif options.year == 18:
+        A_kspi_up = -0.942058542057
+        A_kspi_err_up = 0.270644276803
 
-            A_kpipi_up = -1.5471233568
-            A_kpipi_err_up = 0.131391285254
+        A_kpipi_up = -1.5471233568
+        A_kpipi_err_up = 0.131391285254
 
-            A_kspi_down = -0.277769785338
-            A_kspi_err_down = 0.288008079473
+        A_kspi_down = -0.277769785338
+        A_kspi_err_down = 0.288008079473
 
-            A_kpipi_down = -1.27619403857
-            A_kpipi_err_down = 0.129960950228
+        A_kpipi_down = -1.27619403857
+        A_kpipi_err_down = 0.129960950228
 
         # Production asymmetry for K0 found from a paper
         A_k0 = 0.054
@@ -299,7 +299,7 @@ def integrated_asym(val, err):
 
 def A_prod_unbinned():
     """
-    A prod for the global intergrated asymmetry
+    A prod for the global integrated asymmetry
     """
     yield_D0_up = read_from_file_global("D0", "up")
     yield_D0bar_up = read_from_file_global("D0bar", "up")
@@ -479,6 +479,7 @@ if options.blind == 'y' or options.blind == 'Y':
 
     # A_prod, A_prod_up, A_prod_down, A_prod_up_err, A_prod_down_err, A_prod_err: Blinded and Unblinded are given from production_asymm
     # production_asymm requires A_raw_up, A_raw_down, A_raw_up_err, A_raw_down_err, A_det_up, A_det_down, A_det_down_err, A_det_up_err
+    # Unblinded_prod[0] = A_prod, Unblinded_prod[1] = A_prod_up, Unblinded_prod[2] = A_prod_down, Unblinded_prod[3] = A_prod_up_err, Unblinded_prod[4] = A_prod_down_err, Unblinded_prod[5] = A_prod_err
     blinded_prod = production_asymm(blind_integrated_raw_up[0], blind_integrated_raw_down[0], A_raw_err_up, A_raw_err_down, A_det_up, A_det_down, A_det_down_error, A_det_up_error)
     Unblinded_prod = production_asymm(unblind_integrated_raw_up[0], unblind_integrated_raw_down[0], A_raw_err_up, A_raw_err_down, A_det_up, A_det_down, A_det_down_error, A_det_up_error)
 
@@ -523,8 +524,10 @@ if options.blind == 'y' or options.blind == 'Y':
     #Saving Aprod calculated from weighted average and Aprod calculated from unbinned average of D0_up, D0_down, D0bar up, D0bar down
 
     # Aprod, Aprod error -- both from weighted mean, Aprod from unbinned average, Aprod err from unbinned average
-    array = np.array([Unblinded_prod[0],Unblinded_prod[5]
-                     , A_prod_unbinned[0], A_prod_unbinned[5]])
+    array = np.array([Unblinded_prod[0], Unblinded_prod[5]
+                     ,A_prod_unbinned[0], A_prod_unbinned[5]]
+                     ,Unblinded_prod[1], Unblinded_prod[3]
+                     ,Unblinded_prod[2], Unblinded_prod[4])
     np.savetxt(f"{options.results_path}/final_asymmetries_{options.scheme}_{options.year}_{options.size}.txt", array)
 
 
