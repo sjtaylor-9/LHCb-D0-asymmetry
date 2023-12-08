@@ -556,7 +556,7 @@ if binned:
             )
 
 
-        legend2.SetFillStyle(0)
+
         legend2.SetFillStyle(0)
         legend2.SetBorderSize(0)
         # text1 = f"\\mu: {str(rounded_pull_mean)} \\pm {str(rounded_pull_mean_error)}"
@@ -568,16 +568,17 @@ if binned:
 
 
         legend2.AddEntry('Data', 'Data', "l")
-        # If curve_fit found a minimised Gaussian distribution then the Gaussian is added to the legend with the best fit mean and standard deviation and their respective uncertainties.
         if Failed == 0:
             legend2.AddEntry(gaussian_fit, "Gaussian Fit", "l")
             # legend2.AddEntry(gaussian_fit, text1, "l")
             # legend2.AddEntry(gaussian_fit, text2, "l")
         legend2.Draw("same")
+
+
         if Failed == 0:
             latex = ROOT.TLatex()
             latex.SetNDC()
-            latex.SetTextSize(0.04)
+
             latex.SetTextSize(0.056)
             if options.scheme == "total":
                 latex.DrawLatex(0.67 ,0.70 , 'Fit \mu:  ' + str(rounded_pull_mean) + ' \pm ' + str(rounded_pull_mean_error))
