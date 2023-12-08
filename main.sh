@@ -109,11 +109,11 @@ for ind in {0..99}
             echo "Fitted Bin "$index
         done
 
-for meson in D0bar
+for meson in D0 D0bar
 do
-   for polar in up
+   for polar in up down
    do 
-        for ind in {47..99}
+        for ind in {0..99}
         do
             index=$( printf '%02d' $ind)
             python model_fitting.py --year $year --size $size --meson $meson --polarity $polar  --path $directory"/model_fitting/local/"$index --input $directory"/binned_data/local" --parameters_path $directory"/model_fitting/local/"$index --bin $index --binned_fit $binned --scheme 'pT_eta'
