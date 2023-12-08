@@ -6,7 +6,7 @@ In this repository there are the necessary tools in order to:
  - Remove multiple candidates,
  - Perform a global fit on the data using either a binned or unbinned simultaneous extended maximum likelihood fit,
  - Produce a global model using the global fit fit parameters ,
- - Create a uniform binning across the phase space - $p_T$, $\eta$ and $p_T$_$\et$ binning schemes,
+ - Create a uniform binning across the phase space - $p_T$, $\eta$ and $p_T$ $\eta$ binning schemes,
  - Perform a local fit in each of the phase space regions, by using a simulatenous exntended maximum likelihood fit and plotting,
  - Process the results and output them with relevant figures,
  - Calculate production Asymmetry: Integrated and Average over the binning scheme bins,
