@@ -2,7 +2,7 @@
 model_fitting.py
 
 This code is used to output a model of the data along with a pull distribution, which is used as the goodness of fit determiner. The code is ran as a global model and also as a local model for each of the bins across the phase space binning scheme. A txt file is also outputted containing the values and errors on the normalisation constant of both signal and background and the mean and error of the pull distribution.
-It can both fit the data using a binned approach or an unbinned one. The unbinned model used consists of a Gaussian function and a Crystal Ball function for the signal, and an exponential function for the background. The binned fit uses a Johnson Su distribution and two Bifurcated Gaussian functions as the signal model and an exponential function for the background. There is a systematic uncertainty assigned with the choice of model, hence the binned fit model chosen to assign to this systematic uncertainty consists of a Johnson Su distribution, a Gaussian function and a Bifurcated Gaussian function and an exponential background function.
+It can both fit the data using a binned approach or an unbinned one. The unbinned model used consists of a Gaussian function and a Crystal Ball function for the signal, and an exponential function for the background. The binned fit uses a Johnson Su distribution and two Bifurcated Gaussian functions as the signal model and an exponential function for the background. There is a systematic uncertainty assigned with the choice of model, hence the binned fit model chosen to assign to this systematic uncertainty consists of a Johnson Su distribution, a Gaussian function and a Bifurcated Gaussian function and an exponential background function. There is an additional source of systematic uncertainty associated with the choice of number of bins for the binned fit, the optimal number of bins is 240 bins and the number of bins chosen for the systematic uncertainty is 200.
 The parameters for the PDFs are read in from fit_parameters.txt, which is the output of fit_global.py. The year of interest, size of the data, meson of interest and polarity to be analysed must be specified using the required flags --year --size --meson --polarity. It is also required to specify the bin to be analyzed using the flag --bin, and if the fit should be done on the binned data or the unbinned data using the flag --binned_fit. There also are the flags --input --parameteers_path and --path, which are not required. These are used to specify the directory where the input data is located, where the global best-fit parameters can be found and where the output should be written, respectively. By default it is set to be the current working directory.
 This code is inspired by Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk).
 
@@ -421,7 +421,7 @@ if binned:
         # Legend settings
         legend.SetFillStyle(0)
         legend.SetBorderSize(0)
-        legend.SetTextSize(label_size*0.28)
+        legend.SetTextSize(label_size*0.30)
         # Adds the legend components
         for key, val in legend_entries.items():
             legend.AddEntry(key, val["title"], val["style"])
@@ -543,24 +543,48 @@ if binned:
             gaussian_fit.SetParameters(params[0],params[1],params[2])
             gaussian_fit.Draw('same')
 
-        # Legend position and settings
-        legend2 = ROOT.TLegend(
-            0.7, 0.78,0.8,0.90, "#bf{#it{"+plot_type2+"}}"
-        )
+        # legend2 = ROOT.TLegend(
+        #     0.67, 0.67,0.8,0.90, "#bf{#it{"+plot_type2+"}}"
+        # )
+        if options.scheme == "total":
+            legend2 = ROOT.TLegend(
+                0.67, 0.74,0.79,0.89, "#bf{#it{"+plot_type2+"}}"
+            )
+        else:
+            legend2 = ROOT.TLegend(
+                0.64, 0.74,0.79,0.89, "#bf{#it{"+plot_type2+"}}"
+            )
+
+
+        legend2.SetFillStyle(0)
         legend2.SetFillStyle(0)
         legend2.SetBorderSize(0)
-        legend2.SetTextSize(0.04)
+        # text1 = f"\\mu: {str(rounded_pull_mean)} \\pm {str(rounded_pull_mean_error)}"
+        # text2 = f"\\sigma: {str(rounded_pull_std)} \\pm {str(rounded_pull_std_error)}"
+        if options.scheme == "total": 
+            legend2.SetTextSize(0.056)
+        else:
+            legend2.SetTextSize(0.047)
+
+
         legend2.AddEntry('Data', 'Data', "l")
         # If curve_fit found a minimised Gaussian distribution then the Gaussian is added to the legend with the best fit mean and standard deviation and their respective uncertainties.
         if Failed == 0:
             legend2.AddEntry(gaussian_fit, "Gaussian Fit", "l")
+            # legend2.AddEntry(gaussian_fit, text1, "l")
+            # legend2.AddEntry(gaussian_fit, text2, "l")
         legend2.Draw("same")
         if Failed == 0:
             latex = ROOT.TLatex()
             latex.SetNDC()
             latex.SetTextSize(0.04)
-            latex.DrawLatex(0.7 ,0.75 , 'Gaussian \mu:  ' + str(rounded_pull_mean) + ' \pm ' + str(rounded_pull_mean_error))
-            latex.DrawLatex(0.7 ,0.71 , 'Gaussian \sigma:  ' + str(rounded_pull_std) + ' \pm ' + str(rounded_pull_std_error))
+            latex.SetTextSize(0.056)
+            if options.scheme == "total":
+                latex.DrawLatex(0.67 ,0.70 , 'Fit \mu:  ' + str(rounded_pull_mean) + ' \pm ' + str(rounded_pull_mean_error))
+                latex.DrawLatex(0.67,0.65 , 'Fit \sigma:  ' + str(rounded_pull_std) + ' \pm ' + str(rounded_pull_std_error))
+            else:
+                latex.DrawLatex(0.64 ,0.70 , 'Fit \mu:  ' + str(rounded_pull_mean) + ' \pm ' + str(rounded_pull_mean_error))
+                latex.DrawLatex(0.64,0.65 , 'Fit \sigma:  ' + str(rounded_pull_std) + ' \pm ' + str(rounded_pull_std_error))
 
     
 
@@ -577,7 +601,10 @@ if binned:
             if Failed == 0:
                 pull_canvas.SaveAs(f"{options.path}/{options.meson}_{options.polarity}_{options.year}_{options.size}_bin{options.bin}_fit_pulls.pdf")
             file = open(f"{options.path}/yields_{options.meson}_{options.polarity}_{options.year}_{options.size}_bin{options.bin}.txt", "w+")
-            text = str(Nsig.getValV()) + ', ' + str(Nsig_error) + ', ' + str(Nbkg.getValV()) + ', ' + str(Nbkg.getError()) + ', ' + str_pull_mean + ', ' + str_pull_sigma
+            if Failed == 0:
+                text = str(Nsig.getValV()) + ', ' + str(Nsig_error) + ', ' + str(Nbkg.getValV()) + ', ' + str(Nbkg.getError()) + ', ' + str_pull_mean + ', ' + str_pull_sigma
+            else:
+                text = str(Nsig.getValV()) + ', ' + str(Nsig_error) + ', ' + str(Nbkg.getValV()) + ', ' + str(Nbkg.getError())
             file.write(text)
             file.close()
         else:
@@ -586,7 +613,10 @@ if binned:
                 pull_canvas.SaveAs(f"{options.path}/{options.meson}_{options.polarity}_{options.year}_{options.size}_fit_pulls.pdf")
             file = open(f"{options.path}/yields_{options.meson}_{options.polarity}_{options.year}_{options.size}.txt", "w+")
             # Nsig Nsig_Err NBkg NBkg error pull_mean pull_sigma
-            text = str(Nsig.getValV()) + ', ' + str(Nsig_error) + ', ' + str(Nbkg.getValV()) + ', ' + str(Nbkg.getError()) + ', ' + str_pull_mean + ', ' + str_pull_sigma
+            if Failed == 0:
+                text = str(Nsig.getValV()) + ', ' + str(Nsig_error) + ', ' + str(Nbkg.getValV()) + ', ' + str(Nbkg.getError()) + ', ' + str_pull_mean + ', ' + str_pull_sigma
+            else:
+                text = str(Nsig.getValV()) + ', ' + str(Nsig_error) + ', ' + str(Nbkg.getValV()) + ', ' + str(Nbkg.getError())                
             file.write(text)
             file.close()
         # disableBinIntegrator(signal)
