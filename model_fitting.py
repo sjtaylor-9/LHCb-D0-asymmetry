@@ -293,7 +293,8 @@ if binned:
         D0_Hist = ROOT.gPad.GetPrimitive("D0_Hist")
         # Creating Binned container sets using RooDataHist
         Binned_data = RooDataHist("Binned_data", "Binned Data Set", RooArgList(D0_M), D0_Hist)
-        enableBinIntegrator(signal, D0_M.numBins())
+        # enableBinIntegrator(signal, D0_M.numBins())
+        # Performs the extended maximum likelihood fit
         result = model["total"].fitTo(Binned_data, RooFit.Save(True), RooFit.Extended(True), IntegrateBins = 1e-03)
 
 
@@ -301,6 +302,7 @@ if binned:
         legend_entries = dict()
 
         Binned_data.plotOn(frame, ROOT.RooFit.Name("remove_me_A"))
+        # Plots the total model PDF as an orange line
         model["total"].plotOn(
             frame,
             RooFit.Name(model["total"].GetName()),
@@ -309,6 +311,7 @@ if binned:
         )
         pull_hist = frame.pullHist()
 
+        # Adds the individual PDF components to the legend
         legend_entries[model["total"].GetName()] = {"title": model["total"].GetTitle(), "style": "l"}
 
         # plot signal components
@@ -350,6 +353,7 @@ if binned:
         frame.remove("remove_me_A")
         frame.remove("remove_me_B")
 
+        # Defines the data point visual parameters and legend title
         D0_Hist.SetMarkerStyle(20)
         D0_Hist.SetMarkerSize(0.9)
         D0_Hist.SetMarkerColor(ROOT.kBlack)
@@ -361,16 +365,18 @@ if binned:
             #     error = D0_Hist.GetBinError(bin)
             #     D0_Hist.SetBinError(bin, 10 * error)
 
+        # Adds the data points to the legend
         frame.addTH1(D0_Hist, "pe")
         legend_entries[D0_Hist.GetName()] = {"title": D0_Hist.GetTitle(), "style": "pe"}
 
-
+        # Appends the data points to the mD0_bins array across the whole of the size of numbins.
         numbins = D0_Hist.GetNbinsX()
         mD0_bins = []
         for i in range(1, numbins+1):
             mD0_bins.append(D0_Hist.GetBinLowEdge(i))
         mD0_bins.append(D0_Hist.GetBinLowEdge(numbins) + D0_Hist.GetBinWidth(numbins))
         mD0_bins = np.array(mD0_bins, dtype=float)
+        # Y axis title settings
         frame.SetYTitle(r"Entries [MeVc^{-2}]")
         frame.GetYaxis().SetTitleOffset(0.95)
 
@@ -378,16 +384,16 @@ if binned:
 
         c = ROOT.TCanvas("fit", "fit", 900, 800)
         fit_pad = ROOT.TPad("fit_pad", "fit pad", 0, 0.2, 1.0, 1.0)
-        fit_pad.SetLogy()
+        fit_pad.SetLogy() # Plots the entries as a logarithmic scale
         fit_pad.Draw()
         fit_pad.cd()
         frame.Draw()
-        
+
+        # X axis title settings
         frame.GetXaxis().SetLabelSize(0)
         frame.GetXaxis().SetTitleSize(0)
 
-
-
+        
         frame.Draw()
         title_size = frame.GetYaxis().GetTitleSize() * 2.5
         label_size = frame.GetYaxis().GetLabelSize() * 2.5
@@ -399,6 +405,7 @@ if binned:
 
         latex = ROOT.TLatex()
         latex.SetNDC()
+        # Adds the decay mode of the chosen meson to the top right of the plot.
         if meson == "D0":
             latex.DrawLatex(0.7, 0.8, "#it{D^{0} #rightarrow K^{-}#pi^{+}}")
         else:
@@ -407,12 +414,15 @@ if binned:
         # Draw the text on the canvas
         latex.Draw('same')
 
+        # Adds the position of the legend and gives legend a bold, italicised title described by plot_type
         legend = ROOT.TLegend(
             0.16, 0.91 - ywidth - 0.05, 0.1 + xwidth, 0.91, "#bf{#it{"+plot_type+"}}"
         )
+        # Legend settings
         legend.SetFillStyle(0)
         legend.SetBorderSize(0)
         legend.SetTextSize(label_size*0.28)
+        # Adds the legend components
         for key, val in legend_entries.items():
             legend.AddEntry(key, val["title"], val["style"])
         legend.Draw("same")
@@ -458,6 +468,7 @@ if binned:
         pull_frame.GetYaxis().SetLabelSize(label_size)
         pull_frame.GetYaxis().SetTitleSize(title_size)
         pull_frame.GetYaxis().SetTitleOffset(0.35)
+        # Adds the X axis title underneath the pull distribution plot as the X axis is shared between the pulls and invariant mass distribution.
         if meson == "D0":
             pull_frame.GetXaxis().SetTitle(r"#it{D^{0}} mass [MeVc^{-2}]")
         elif meson == "D0bar":
@@ -496,7 +507,7 @@ if binned:
             y.append(pull.GetBinContent(i))
             x.append(pull.GetBinCenter(i))
 
-        #Using curve_fit to find Paramters
+        #Using curve_fit to find paramters of the gaussian fit through the pull distribution.
         try:
             params, cov, *_ = curve_fit(gaussian, x, y, p0=[max(x),0,1], bounds=([0,-np.inf,0],[np.inf,np.inf,np.inf]))
             errs = np.sqrt(np.diag(cov))
@@ -511,6 +522,7 @@ if binned:
             print("Optimal parameters not found")
             Failed = 1
 
+        # plot_type2 is the legend title for the pull distribution. If the code is ran for individual bins from the binning scheme across the phase space then the legend title contains the bin number.
         if meson == "D0":
             if options.scheme == "eta" or options.scheme == "pT" or options.scheme == "pT_eta":
                 plot_type2 = f"20{options.year} D^{{0}} Mag{polarity} Bin{options.bin}"
@@ -524,22 +536,22 @@ if binned:
         
         
 
-
+        # Adds the Gaussian function to the pull distribution as a blue line if curve_fit found a minimised Gaussian distribution.
         if Failed == 0:
             gaussian_fit = ROOT.TF1("gaussian_fit", "gaus", -5, 5)
             gaussian_fit.SetLineColor(4)
             gaussian_fit.SetParameters(params[0],params[1],params[2])
             gaussian_fit.Draw('same')
 
+        # Legend position and settings
         legend2 = ROOT.TLegend(
             0.7, 0.78,0.8,0.90, "#bf{#it{"+plot_type2+"}}"
         )
-
         legend2.SetFillStyle(0)
         legend2.SetBorderSize(0)
-
         legend2.SetTextSize(0.04)
         legend2.AddEntry('Data', 'Data', "l")
+        # If curve_fit found a minimised Gaussian distribution then the Gaussian is added to the legend with the best fit mean and standard deviation and their respective uncertainties.
         if Failed == 0:
             legend2.AddEntry(gaussian_fit, "Gaussian Fit", "l")
         legend2.Draw("same")
@@ -555,6 +567,7 @@ if binned:
 
         pull_canvas.Show()
 
+        # Calculates a reduced chi squared. Chi squared cannot be used as a goodness of fit for an extended maximum likelihood fit. However, can still calculate a pseudo-chi squared.
         # nparams = model["total"].getParameters(Binned_data).selectByAttrib("Constant", False).getSize()
         # chi2 = frame.chiSquare(model["total"].GetName(), 'Binned Data Set', nparams - 1)
 
@@ -576,11 +589,11 @@ if binned:
             text = str(Nsig.getValV()) + ', ' + str(Nsig_error) + ', ' + str(Nbkg.getValV()) + ', ' + str(Nbkg.getError()) + ', ' + str_pull_mean + ', ' + str_pull_sigma
             file.write(text)
             file.close()
-        disableBinIntegrator(signal)
+        # disableBinIntegrator(signal)
         
         
   
-
+# Runs the unbinned fit, where the model is plotted using the code from utils.py.
 else:
     unbinned_data = RooDataSet("data", "Data", ttree, RooArgSet(D0_M))
     model["total"].fitTo(unbinned_data, RooFit.Save(), RooFit.Extended(1), RooFit.Minos(0))
@@ -592,7 +605,7 @@ else:
     file.write(text)
     file.close()
 
-
+# Prints the total number of entries.
 print(ttree.GetEntries())
 gc.collect()
 exit()
