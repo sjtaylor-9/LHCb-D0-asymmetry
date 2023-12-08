@@ -13,7 +13,7 @@ In this repository there are the necessary tools in order to:
  - Plot the asymmetry in the bins of pT_eta.
  - Plot Asymmetry against pT and eta
 
-Note that when performing the local fit some of the parameters have been fixed, using the values obtained in the global fit, in order to ensure convergence. Also note that if this program is to be used with a different set of data, the file *selection_of_events.py* will need to be modified, and other modifications may be required as well. If phase space is changed, the plotting of Asymmetry and create and apply binning scheme python files may need to be changed.
+Note that if this program is to be used with a different set of data, the file *selection_of_events.py* will need to be modified, and other modifications may be required as well. If phase space is changed, the plotting of Asymmetry and create and apply binning scheme python files may need to be changed.
 
 **Warnings:**
 While running the code be aware that any change to one of the scripts can lead to a malfunction. In addition, make sure that the directories that will be generated while running the program don't already exist. If they do exist beforehand, this program might not work as intended.
