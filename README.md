@@ -1,4 +1,4 @@
-# D0 production asymmetry calculator using K-pi
+# Measuring the Production Asymmetry between $D^0$ and  $\bar{D}^0$ mesons due to proton-proton collisions at the LHCb
 This project is aimed to calculating the production asymmetry of the D0 meson. This is done in differents regions of the phase space spanned by the transverse momentum and pseudorapidity of the D0 meson. This is the current version (7th December) of the code and the predominent focus has been to implement a binned fit in order to increase run time speeds by 2 orders of magnitude. This repository will be updated throughout the next 5 months. Currently, only the binned fit is functioning. The project was done in collaboration with Laxman Seelan.
 
 In this repository there are the necessary tools in order to:
