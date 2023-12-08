@@ -10,7 +10,7 @@ In this repository there are the necessary tools in order to:
  - Perform a local fit in each of the phase space regions, by using a simulatenous exntended maximum likelihood fit and plotting,
  - Process the results and output them with relevant figures,
  - Calculate production Asymmetry: Integrated and Average over the binning scheme bins,
- - Plot the asymmetry in the bins of $p_T$_$\eta$,
+ - Plot the asymmetry in the bins of $p_T$ $\eta$,
  - Plot Asymmetry against $p_T$ and $\eta$.
 
 Note that if this program is to be used with a different set of data, the file *selection_of_events.py* will need to be modified, and other modifications may be required as well. If phase space is changed, the plotting of Asymmetry and create and apply binning scheme python files may need to be changed.
