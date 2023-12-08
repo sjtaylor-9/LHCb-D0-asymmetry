@@ -115,7 +115,7 @@ def dir_path(string):
     else:
         raise NotADirectoryError(string)
         
-def read_from_file(meson, polarity, bin_num, parameter):
+def read_from_file(meson, polarity, bin_num, scheme):
     '''
     Opens a .txt files and reads the values of the signal normalization constant and its uncertainty.
     
