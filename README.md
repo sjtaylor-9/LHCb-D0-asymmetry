@@ -2,16 +2,16 @@
 This project is aimed to calculating the production asymmetry of the D0 meson. This is done in differents regions of the phase space spanned by the transverse momentum and pseudorapidity of the D0 meson. This is the current version (7th December) of the code and the predominent focus has been to implement a binned fit in order to increase run time speeds by 2 orders of magnitude. This repository will be updated throughout the next 5 months. Currently, only the binned fit is functioning. The project was done in collaboration with Laxman Seelan.
 
 In this repository there are the necessary tools in order to:
- - Make a selection of the events given a certain criteria
- - Remove multiple candidates
- - Perform a global fit on the data using a simultaneous fit
- - Fit both using a binned and an unbinned approach
- - Create a uniform binning across the phase space - pT, eta and pT_eta binning schemes.
- - Perform a local fit in each of the phase space regions, by using a simulatenous fit and plotting.
- - Process the results and output them with relevant figures
- - Calculate production Asymmetry: Integrated and Average over the binning scheme bins.
- - Plot the asymmetry in the bins of pT_eta.
- - Plot Asymmetry against pT and eta
+ - Make a selection of the events given a certain criteria,
+ - Remove multiple candidates,
+ - Perform a global fit on the data using a simultaneous fit,
+ - Fit both either using a binned or an unbinned approach,
+ - Create a uniform binning across the phase space - $p_T$, eta and pT_eta binning schemes,
+ - Perform a local fit in each of the phase space regions, by using a simulatenous fit and plotting,
+ - Process the results and output them with relevant figures,
+ - Calculate production Asymmetry: Integrated and Average over the binning scheme bins,
+ - Plot the asymmetry in the bins of pT_eta,
+ - Plot Asymmetry against pT and eta.
 
 Note that if this program is to be used with a different set of data, the file *selection_of_events.py* will need to be modified, and other modifications may be required as well. If phase space is changed, the plotting of Asymmetry and create and apply binning scheme python files may need to be changed.
 
