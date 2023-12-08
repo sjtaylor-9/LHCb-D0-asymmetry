@@ -6,11 +6,11 @@ In this repository there are the necessary tools in order to:
  - Remove multiple candidates,
  - Perform a global fit on the data using a simultaneous fit,
  - Fit both either using a binned or an unbinned approach,
- - Create a uniform binning across the phase space - $p_T$, $\eta$ and $p_{T\eta}$ binning schemes,
+ - Create a uniform binning across the phase space - $p_T$, $\eta$ and $p_{T,\eta}$ binning schemes,
  - Perform a local fit in each of the phase space regions, by using a simulatenous fit and plotting,
  - Process the results and output them with relevant figures,
  - Calculate production Asymmetry: Integrated and Average over the binning scheme bins,
- - Plot the asymmetry in the bins of $p{_T\eta}$,
+ - Plot the asymmetry in the bins of $p{_T,\eta}$,
  - Plot Asymmetry against $p_T$ and $\eta$.
 
 Note that if this program is to be used with a different set of data, the file *selection_of_events.py* will need to be modified, and other modifications may be required as well. If phase space is changed, the plotting of Asymmetry and create and apply binning scheme python files may need to be changed.
