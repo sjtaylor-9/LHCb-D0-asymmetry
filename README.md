@@ -5,7 +5,7 @@ In this repository there are the necessary tools in order to:
  - Make a selection of the events given a certain criteria,
  - Remove multiple candidates,
  - Perform a global fit on the data using either a binned or unbinned simultaneous extended maximum likelihood fit,
- - Produce a global model using the global fit git parameters ,
+ - Produce a global model using the global fit fit parameters ,
  - Create a uniform binning across the phase space - $p_T$, $\eta$ and $p_{T,\eta}$ binning schemes,
  - Perform a local fit in each of the phase space regions, by using a simulatenous exntended maximum likelihood fit and plotting,
  - Process the results and output them with relevant figures,
