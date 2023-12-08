@@ -2,7 +2,7 @@
 fit_global.py
 
 This code is used to perform a global fit on the selected data. In order to do so a simulatenous fit is done on the four datasets (with different mesons and polarities). This simulatenous fit keeps all variables constant across the four fits except for the normalisation constants which are allowed to vary independently. The unbinned fit model consists of a Crystal Ball function and a Gaussian distribution to model the signal and an Exponential decay to model the background.
-The binned fit model consists of a Johnson Su distribution and two Bifurcated Gaussian functions and an exponential background function. There is a systematic uncertainty assigned with the choice of model, hence the binned fit model chosen to assign to this systematic uncertainty consists of a Johnson Su distribution, a Gaussian function and a Bifurcated Gaussian function.
+The binned fit model consists of a Johnson Su distribution and two Bifurcated Gaussian functions and an exponential background function. There is a systematic uncertainty assigned with the choice of model, hence the binned fit model chosen to assign to this systematic uncertainty consists of a Johnson Su distribution, a Gaussian function and a Bifurcated Gaussian function. There is an additional source of systematic uncertainty associated with the choice of number of bins for the binned fit, the optimal number of bins is 240 bins and the number of bins chosen for the systematic uncertainty is 200.
 The year of interest and size of the data to be analysed must be specified using the required flags --year --size. It is necessary to specify if the fit should be performed on the binned data or the unbinned data using the flag --binned_fit. There is a flag --path, which is not required. This one is used to specify the directory where the input data is located, and where the output file should be written. By default it is set to be the current working directory.
 It outputs the value of the constants shared in the simultaneous fit to a text file. This code is inspired by Marc Oriol Pérez (marc.oriolperez@student.manchester.ac.uk), however it has been redesigned so that the binned fit is succesfully performed.
 
@@ -42,7 +42,7 @@ def parse_arguments():
                     in the case it is not specified, the default path is the current working directory.
     --binned_fit    Used to specify if the data should be binned before performing the fit or an unbinned fit should be performed.
                     Type either y or Y for a binned fit. Type n or N for an unbinned fit.
-    --scheme        Used to specify which type of binning scheme should be used. 
+    --scheme        Used to deduce whether a global or local fit is to be peformed and if a local fit then to specify which type of binning scheme should be used. 
                     Argument must be one of: ["total","pT_eta","pT","eta"].
     --bin           Used to determine which bin within the binning scheme is to be fit.
     
@@ -119,7 +119,7 @@ def disableBinIntegrator(func):
 # - - - - - - - MAIN BODY - - - - - - - #
 args = parse_arguments()
 # Binned fit bin parameters
-numbins = 240
+numbins = 240 # Optimum model and model used to find systematic uncertainty in choice of model use 240 bins, model used to find systematic uncertainty in choice of bins uses 200 bins.
 lower_boundary = 1815
 upper_boundary = 1910
 
