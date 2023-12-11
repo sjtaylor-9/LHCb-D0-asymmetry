@@ -629,7 +629,7 @@ else:
     unbinned_data = RooDataSet("data", "Data", ttree, RooArgSet(D0_M))
     model["total"].fitTo(unbinned_data, RooFit.Save(), RooFit.Extended(1), RooFit.Minos(0))
     # Generate plots from the plot function in utils.py
-    chi2, pull_mean, pull_std = plot(D0_M, unbinned_data, model, nbins=numbins, setlogy=False, save_to=f'{options.path}/{options.meson}_{options.polarity}_{options.year}_{options.size}', plot_type=f"20{options.year} Mag{(options.polarity).title()}", meson=options.meson)
+    chi2, pull_mean, pull_std = plot(D0_M, unbinned_data, model, nbins=numbins, setlogy=True, save_to=f'{options.path}/{options.meson}_{options.polarity}_{options.year}_{options.size}', plot_type=f"20{options.year} Mag{(options.polarity).title()}", meson=options.meson)
     # Write out results
     file = open(f"{options.path}/yields_{options.meson}_{options.polarity}_{options.year}_{options.size}.txt", "w+")
     text = str(Nsig.getValV()) + ', ' + str(Nsig.getError()) + ', ' + str(Nbkg.getValV()) + ', ' + str(Nbkg.getError()) + ', ' + str(chi2) + ', ' + str(pull_mean) + ', ' + str(pull_std)
