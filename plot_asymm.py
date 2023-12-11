@@ -260,7 +260,7 @@ cbar.ax.tick_params(labelsize=12)
 cbar.set_label(r'$A_{\mathrm{prod}}$ [%]', fontsize=20, rotation=270, labelpad=20)
 ax.figure.axes[0].tick_params(axis="both", labelsize=12) 
 
-cbar.ax.axhline(binned_asymm, color='orange', linestyle='-', label=r'Average result over $p_{T}$_$\eta$ bins', linewidth = 3.5)
+cbar.ax.axhline(binned_asymm, color='orange', linestyle='-', label=r'Average result over $(p_{T}, \eta)$ phase space', linewidth = 3.5)
 cbar.ax.axhline(unbinned_asymm, color='lime', linestyle='dotted', label= r'Bin integrated result', linewidth = 3.5)
 legend = cbar.ax.legend(loc='upper center', bbox_to_anchor=(-2.5, 1.25), fontsize= 16)
 legend.get_frame().set_alpha(0.3)
