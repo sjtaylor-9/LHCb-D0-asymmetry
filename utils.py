@@ -15,7 +15,7 @@ def plot(
     model: dict(),
     nbins: int = 50,
     nparams: int = 0,
-    setlogy: bool = False,
+    setlogy: bool = True,
     save_to: str = "",
     plot_type: str = "",
     meson: str = '',
@@ -127,10 +127,32 @@ def plot(
         bin_width = pull_hist.GetPointX(1) - pull_hist.GetPointX(0)
         minimum = pull_hist.GetPointX(0) - bin_width / 2
         maximum = pull_hist.GetPointX(nbins - 1) + bin_width / 2
+        
+        
+        # Plots the pull distribution, where bad pulls (>5 sigma away from the fit) are made to be red
+        pull_frame = observable.frame(R.RooFit.Title(" "))
         pull_TH1 = R.TH1D("pull_TH1", "pull_TH1", nbins, minimum, maximum)
+        bad_pull_TH1 = R.TH1D("bad_pull_TH1", "bad_pull_TH1", nbins, minimum, maximum)
         for i in range(pull_hist.GetN()):
-            pull_TH1.SetBinContent(i + 1, pull_hist.GetPointY(i))
+            if pull_hist.GetPointY(i) > 5:
+                pull_TH1.SetBinContent(i + 1, 5)
+                bad_pull_TH1.SetBinContent(i + 1, 5)
+            elif pull_hist.GetPointY(i) < -5:
+                pull_TH1.SetBinContent(i + 1, -5)
+                bad_pull_TH1.SetBinContent(i + 1, -5)
+            elif pull_hist.GetPointY(i) == 0:
+                pull_TH1.SetBinContent(i + 1, 0)
+                bad_pull_TH1.SetBinContent(i + 1, 0)
+            else:
+                pull_TH1.SetBinContent(i + 1, pull_hist.GetPointY(i))
+                if abs(pull_hist.GetPointY(i)) >= 3:
+                    bad_pull_TH1.SetBinContent(i + 1, pull_hist.GetPointY(i))
+
+        bad_pull_TH1.SetFillColor(R.kRed)
         pull_frame.addTH1(pull_TH1, "bar min0")
+        pull_frame.addTH1(bad_pull_TH1, "bar min0")
+
+
 
         fit_canvas.cd(0)
         pull_pad = R.TPad("pull_pad", "pull pad", 0.0, 0.0, 1.0, 0.31)
@@ -148,9 +170,9 @@ def plot(
         pull_frame.GetYaxis().SetTitleSize(title_size*0.9)
         pull_frame.GetYaxis().SetTitleOffset(0.40)
         if meson == "D0":
-            pull_frame.GetXaxis().SetTitle("D^{0} mass / [MeV]")
+            pull_frame.GetXaxis().SetTitle(r"D^{0} mass [MeVc^{-2}]")
         elif meson == "D0bar":
-            pull_frame.GetXaxis().SetTitle("{#bar{D}^{0} mass / [MeV]")
+            pull_frame.GetXaxis().SetTitle(r"{#bar{D}^{0} mass [MeVc^{-2}]")
 
         line = R.TLine(observable.getMin(), 0, observable.getMax(), 0)
         line2 = R.TLine(observable.getMin(), 3, observable.getMax(), 3)
